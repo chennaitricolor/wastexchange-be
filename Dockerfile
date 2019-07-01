@@ -14,5 +14,5 @@ FROM node:10-alpine
 COPY --from=builder /home/app /home/app
 WORKDIR /home/app
 RUN npm install --production
-ENTRYPOINT NODE_ENV=production node src/index.js
+ENTRYPOINT  NODE_ENV=production node src/index.js
 EXPOSE 80
