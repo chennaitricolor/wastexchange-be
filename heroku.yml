@@ -1,0 +1,5 @@
+build:
+  docker:
+    wsm-service: Dockerfile
+run:
+  web: NODE_ENV=production node src/index.js
