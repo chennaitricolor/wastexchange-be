@@ -5,3 +5,5 @@ release:
   image:  wsm-service
   command:
     - NODE_ENV=production node src/index.js
+run:
+  wsm-service: NODE_ENV=production node src/index.js

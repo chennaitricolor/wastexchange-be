@@ -10,7 +10,7 @@ RUN npm install
 RUN source local-startup.sh && npm test || echo "Unit Tests Failed"
 RUN npm install --production
 
-FROM node:10-alpine
+FROM node:10-alpine as production
 COPY --from=builder /home/app /home/app
 WORKDIR /home/app
 RUN npm install --production
