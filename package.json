@@ -1,0 +1,63 @@
+{
+  "name": "chennai-waste-management-service",
+  "version": "1.0.0",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+  "main": "src/index.js",
+  "jest-junit": {
+    "outputDirectory": "./coverage",
+    "outputName": "junit.xml"
+  },
+  "scripts": {
+    "debug": "node --inspect src/index.js",
+    "start": "node src/index.js",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand --detectOpenHandles",
+    "test:watch": "jest --forceExit --detectOpenHandles --watch",
+    "watch": "nodemon src/index.js",
+    "lint": "eslint ./src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "jest": "^23.6.0",
+    "jest-junit": "^5.2.0",
+    "nock": "^9.6.1",
+    "nodemon": "^1.18.3",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "airbrake-js": "^1.4.6",
+    "async": "^2.6.1",
+    "azure-sb": "^0.10.6",
+    "body-parser": "^1.18.3",
+    "config": "^2.0.1",
+    "cookie-parser": "^1.4.4",
+    "cross-fetch": "^3.0.4",
+    "debug": "^3.1.0",
+    "dotenv": "^6.0.0",
+    "expr-eval": "^1.2.2",
+    "express": "^4.16.3",
+    "isomorphic-fetch": "^2.2.1",
+    "joi": "^13.6.0",
+    "json2csv": "^4.3.1",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.23",
+    "morgan": "^1.9.1",
+    "newrelic": "^4.7.0",
+    "ramda": "^0.26.1",
+    "request": "^2.88.0",
+    "swagger-jsdoc": "^3.0.3",
+    "swagger-ui-express": "^4.0.1",
+    "tedious": "^2.6.4",
+    "winston": "^3.0.0",
+    "winston-context": "0.0.7",
+    "winston-transport": "^4.2.0",
+    "ws": "^6.0.0"
+  }
+}
