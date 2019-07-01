@@ -1,3 +1,7 @@
 build:
   docker:
     wsm-service: Dockerfile
+release:
+  image:  wsm-service
+  command:
+    - NODE_ENV=production node src/index.js
