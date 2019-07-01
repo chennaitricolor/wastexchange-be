@@ -14,7 +14,7 @@ const { logger } = require('./lib');
 
 const app = express();
 
-const port = process.env.PORT || 7700;
+const port = process.env.PORT || 7000;
 
 app.use(bodyParser.json({
   limit: '50mb',

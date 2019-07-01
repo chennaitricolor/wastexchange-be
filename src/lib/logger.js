@@ -25,7 +25,7 @@ function createLogger(env) {
       ),
       transports: [
         new winston.transports.Console({ silent: isTestEnvironment }),
-    //    new CustomTransport(),
+        //    new CustomTransport(),
       ],
     });
   } else {
