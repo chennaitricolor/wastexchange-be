@@ -25,6 +25,7 @@ if (error) {
   throw new Error(`Config validation error: ${error.message}`);
 }
 const {
+  // eslint-disable-next-line
   NODE_ENV,
   NODE_CONFIG_ENV,
   PORT,

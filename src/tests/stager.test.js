@@ -1,5 +1,4 @@
 const request = require('supertest');
-const nock = require('nock');
 const server = require('../index');
 
 describe('health endpoint test', () => {
@@ -12,4 +11,3 @@ describe('health endpoint test', () => {
       });
   });
 });
-
