@@ -16,6 +16,11 @@ const envVarsSchema = Joi.object({
   //   .required()
   //   .description('AirBrake Project Key'),
   PORT: Joi.number().default(7600),
+  DB_HOST: Joi.string(),
+  DB_PORT: Joi.string(),
+  DB_NAME: Joi.string(),
+  DB_PWD: Joi.string(),
+  DB_USER: Joi.string()
 })
   .unknown()
   .required();
@@ -29,10 +34,22 @@ const {
   NODE_ENV,
   NODE_CONFIG_ENV,
   PORT,
+  DB_HOST,
+  DB_NAME,
+  DB_PORT,
+  DB_PWD,
+  DB_USER
 } = envVars;
 
 const config = {
   env: NODE_CONFIG_ENV.trim(),
+  db : {
+  host: DB_HOST.trim(),
+  name: DB_NAME.trim(),
+  port : DB_PORT.trim(),
+  pwd: DB_PWD.trim(),
+  user: DB_USER.trim(),
+  },
   port: PORT,
   logPrefix: 'CHENNAI :: waste-management-service  :: ',
 };
