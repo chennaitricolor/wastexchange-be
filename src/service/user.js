@@ -1,17 +1,18 @@
 const  models = require('../models');
-const { buyerMeta } = models;
+const { userMeta } = models;
 
-class Buyer {
+class UserMeta {
   static signUp(req, res) {
-    const { name, mobile_no, email_id, password } = req.body
-      return buyerMeta
+    const { name, mobile_no, email_id, persona, password } = req.body
+      return userMeta
         .create({
           name,
           mobileNo:mobile_no,
           emailId:email_id,
           password,
+          persona,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date
         })
         .then(userData => res.status(201).send({
           success: true,
@@ -21,4 +22,4 @@ class Buyer {
     }
 }
 
-module.exports = Buyer;
+module.exports = UserMeta;

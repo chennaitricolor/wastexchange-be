@@ -1,8 +1,8 @@
 const health = require('./health');
-const Seller = require('./seller');
-const Buyer = require('./buyer');
+const UserMeta = require('./user');
+const UserDetails = require('./userDetails');
 module.exports = {
-  Buyer,
+  UserDetails,
   health,
-  Seller
+  UserMeta
 };
