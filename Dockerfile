@@ -7,11 +7,21 @@ RUN apk add --no-cache \
         make \
         g++
 RUN npm install
-RUN source local-startup.sh && npm test || echo "Unit Tests Failed"
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_NAME
+ARG DB_PWD
+ARG DB_USER
+RUN npm test || echo "Unit Tests Failed"
 RUN npm install --production
 
 FROM node:10-alpine as production
 COPY --from=builder /home/app /home/app
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_NAME
+ARG DB_PWD
+ARG DB_USER
 WORKDIR /home/app
 RUN npm install --production
 ENTRYPOINT  NODE_ENV=production node src/index.js
