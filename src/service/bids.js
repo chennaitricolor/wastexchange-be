@@ -1,0 +1,107 @@
+const  models = require('../models');
+
+const { bids } = models;
+
+class Bids {
+  static create(req, res) {
+    const { 
+        sellerId,
+        pDate,
+        pTime,
+        details,
+        totalBid,
+        status,
+         } = req.body
+    const { buyerId } = req.params
+    return bids
+      .create({
+        buyerId,
+        sellerId,
+        pDate:  Date.parse(pDate, "dd/mm/yyyy"),
+        pTime,
+        details,
+        totalBid,
+        status,
+        cretedAt: new Date(),
+        updatedAt: new Date()
+      })
+      .then(bids => res.status(201).send({
+        message: `Your bids details are created `,
+        bids
+      }))
+    }
+  static list(req, res) {
+    return bids
+      .findAll()
+      .then(bids => res.status(200).send(bids));
+  }
+
+  static getItemByBuyerId(req, res) {
+    return bids
+      .findOne({ where: {buyerId: req.params.buyerId }})
+      .then(bids => res.status(200).send(bids));
+  }
+
+  static getbidById(req, res) {
+    return bids
+      .findByPk(req.params.bidId)
+      .then(bids => res.status(200).send(bids));
+  }
+
+
+  static modify(req, res) {
+    const {     
+        buyerId,
+        sellerId,
+        pDate,
+        pTime,
+        details,
+        totalBid,
+        status, } = req.body
+    return bids
+      .findByPk(req.params.bidId)
+      .then((item) => {
+        item.update({
+            sellerId: sellerId || bids.sellerId,
+            details: details || bids.details,
+            buyerId: buyerId || bids.buyerId,
+            pDate: Date.parse(pDate, "dd/mm/yyyy") || bids.pDate,
+            pTime: pTime || bids.pTime,
+            totalBid: totalBid || bids.totalBid,
+            status: status || bids.status,
+            updatedAt: new Date()
+        })
+        .then((updatedbids) => {
+          res.status(200).send({
+            message: 'bids updated successfully',
+            data: {
+                sellerId:  updatedbids.sellerId,
+                details: updatedbids.details,
+            }
+          })
+        })
+        .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error));
+  }
+  static delete(req, res) {
+    return bids
+      .findByPk(req.params.bidId)
+      .then(bid => {
+        if(!bid) {
+          return res.status(400).send({
+          message: 'bids Not Found',
+          });
+        }
+        return bid
+          .destroy()
+          .then(() => res.status(200).send({
+            message: 'bids successfully deleted'
+          }))
+          .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error))
+  }
+}
+
+module.exports = Bids;

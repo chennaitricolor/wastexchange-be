@@ -39,6 +39,20 @@ class UserDetails {
       .findAll()
       .then(users => res.status(200).send(users));
   }
+
+  static getUserDetailsByUserId(req, res) {
+    return userDetails
+      .findAll({ where: { userId: req.params.userId}})
+      .then(users => res.status(200).send(users));
+  }
+
+
+  static getUserDetailByDetailId(req, res) {
+    return userDetails
+      .findByPk(req.params.detailId)
+      .then(users => res.status(200).send(users));
+  }
+
   static modify(req, res) {
     const {     
         city,
