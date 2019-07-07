@@ -56,3 +56,98 @@ class UserMeta {
 }
 
 module.exports = UserMeta;
+
+/**
+ * @swagger
+ *
+ * definitions:
+ *   NewUser:
+ *     type: object
+ *     required:
+ *       - name
+ *       - email_id
+ *       - mobile_no
+ *       - persona
+ *       - password
+ *     properties:
+ *       name:
+ *         type: string
+ *       password:
+ *         type: string
+ *         format: password
+ *       email_id:
+ *          type: string
+ *       mobile_no: 
+ *          type: integer
+ *       persona:
+ *          type: string
+ *   loginSchema:
+ *     properties:
+ *       email: 
+ *          type: string
+ *       password:
+ *          type: string
+
+ */
+
+
+// Swagger Definitions
+/**
+* @swagger
+* path:
+*   /users/register:
+*     post:
+*       description: signup (create new user meta)
+*       produces:
+*        - application/json
+*       parameters:
+*        - name: user
+*          description: User object
+*          in:  body
+*          required: true
+*          type: string
+*          schema:
+*           $ref: '#/definitions/NewUser'
+*       responses:
+*         201:
+*           description: user created successfully
+
+*/
+//
+/**
+* @swagger
+* path:
+*   /users/login:
+*     post:
+*       description: login
+*       produces:
+*        - application/json
+*       parameters:
+*        - name: user
+*          description: User object
+*          in:  body
+*          required: true
+*          type: string
+*          schema:
+*           $ref: '#/definitions/loginSchema'
+*       responses:
+*         200:
+*           description: user logged in  successfully
+ */
+
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /users/me:
+*     get:
+*       description: get user meta with jwt
+*       parameters:
+*          - in: header
+*            name: x-access-token
+*            required: true
+*       responses:
+*         200:
+*           description: user details.
+*/

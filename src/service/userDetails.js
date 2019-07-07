@@ -114,3 +114,185 @@ class UserDetails {
 }
 
 module.exports = UserDetails;
+
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /userdetails:
+*     get:
+*       description: get all userdetails
+*       responses:
+*         200:
+*           description: user details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /userdetails/{detailsId}:
+*     get:
+*       description: get user details belonging to an detailsId
+*       parameters:
+*         - in: path
+*           name: detailsId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: user details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /users/{userId}/userdetails:
+*     get:
+*       description: get all user details
+*       parameters:
+*         - in: path
+*           name: userId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: user details.
+*/
+
+/**
+ * @swagger
+ *
+ * definitions:
+ *   UserDetails:
+ *     type: object
+ *     required:
+ *       - city
+ *       - pinCode
+ *       - address
+ *       - mobNo
+ *       - altMobNo
+ *       - lat
+ *       - persona
+ *       - long
+ *     properties:
+ *       city:
+ *         type: string
+ *       pinCode:
+ *         type: integer
+ *       mobNo:
+ *         type: integer
+ *       altMobNo:
+ *         type: integer
+ *       lat:
+ *         type: string
+ *       long:
+ *         type: string
+ *       persona:
+ *         type: string
+ *       address:
+ *         type: string
+ *         
+ *   modifyUserDetails:
+ *     type: object
+ *     required:
+ *       - city
+ *       - pinCode
+ *       - address
+ *       - mobNo
+ *       - altMobNo
+ *       - lat
+ *       - long
+ *     properties:
+ *       city:
+ *         type: string
+ *       pinCode:
+ *         type: integer
+ *       mobNo:
+ *         type: integer
+ *       altMobNo:
+ *         type: integer
+ *       lat:
+ *         type: string
+ *       long:
+ *         type: string
+ *       address:
+ *         type: string
+ */
+
+//
+/**
+* @swagger
+* path:
+*   /users/{userId}/userdetails:
+*     post:
+*       description: create userDetails
+*       parameters:
+*         - in: path
+*           name: userId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: details
+*           description: details object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/UserDetails'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: details created successfully
+ */
+
+ //
+/**
+* @swagger
+* path:
+*   /userdetails/{detailsId}:
+*     put:
+*       description: modify userdetails
+*       parameters:
+*         - in: path
+*           name: detailsId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: userdetails
+*           description: userdetails object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/modifyUserDetails'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: userdetails updated successfully
+ */
+
+
+  // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /userdetails/{detailsId}:
+*     delete:
+*       description: delete all userdetails belonging to an detailsId
+*       parameters:
+*         - in: path
+*           name: detailsId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: userdetails successfully deleted.
+*/

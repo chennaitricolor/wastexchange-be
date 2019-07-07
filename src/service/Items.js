@@ -85,3 +85,144 @@ class Items {
 }
 
 module.exports = Items;
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /items:
+*     get:
+*       description: get all items
+*       responses:
+*         200:
+*           description: item details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /items/{itemId}:
+*     get:
+*       description: get all items belonging to an itemid
+*       parameters:
+*         - in: path
+*           name: itemId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: item details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /seller/{sellerId}/items:
+*     get:
+*       description: get all seller  items
+*       parameters:
+*         - in: path
+*           name: sellerId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: item details.
+*/
+
+/**
+ * @swagger
+ *
+ * definitions:
+ *   Items:
+ *     type: object
+ *     required:
+ *       - details
+ *     properties:
+ *       details:
+ *         type: json
+ *   modifyItems:
+ *     properties:
+ *       sellerId: 
+ *          type: integer
+ *       details:
+ *          type: json
+
+ */
+
+//
+/**
+* @swagger
+* path:
+*   /seller/{sellerId}/items:
+*     post:
+*       description: create items seller has put up for sale
+*       parameters:
+*         - in: path
+*           name: sellerId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: items
+*           description: items object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/Items'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: item created  successfully
+ */
+
+ //
+/**
+* @swagger
+* path:
+*   /items/{itemId}:
+*     put:
+*       description: modify items seller has put up for sale
+*       parameters:
+*         - in: path
+*           name: itemId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: items
+*           description: items object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/modifyItems'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: item updated  successfully
+ */
+
+
+  // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /items/{itemId}:
+*     delete:
+*       description: delete all items belonging to an itemid
+*       parameters:
+*         - in: path
+*           name: itemId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: items successfully deleted.
+*/

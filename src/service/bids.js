@@ -105,3 +105,179 @@ class Bids {
 }
 
 module.exports = Bids;
+
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /bids:
+*     get:
+*       description: get all bids
+*       responses:
+*         200:
+*           description: bids details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /bids/{bidId}:
+*     get:
+*       description: get all items belonging to an bidId
+*       parameters:
+*         - in: path
+*           name: bidId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: bid details.
+*/
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /buyer/{buyerId}/bids:
+*     get:
+*       description: get all bids
+*       parameters:
+*         - in: path
+*           name: buyerId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: bid details.
+*/
+
+/**
+ * @swagger
+ *
+ * definitions:
+ *   Bids:
+ *     type: object
+ *     required:
+ *       - sellerId
+ *       - pDate
+ *       - pTime
+ *       - details
+ *       - totalBid
+ *       - status
+ *     properties:
+ *       details:
+ *         type: json
+ *       sellerId:
+ *         type: integer
+ *       totalBid:
+ *         type: integer
+ *       pDate:
+ *         type: date
+ *       pTime:
+ *         type: time
+ *       status:
+ *         type: string
+ *         
+ *   modifyBids:
+ *     type: object
+ *     required:
+ *       - sellerId
+ *       - buyerId
+ *       - pDate
+ *       - pTime
+ *       - details
+ *       - totalBid
+ *       - status
+ *     properties:
+ *       details:
+ *         type: json
+ *       sellerId:
+ *         type: integer
+ *       buyerId:
+ *         type: integer
+ *       totalBid:
+ *         type: integer
+ *       pDate:
+ *         type: date
+ *       pTime:
+ *         type: time
+ *       status:
+ *         type: string
+ */
+
+//
+/**
+* @swagger
+* path:
+*   /buyer/{buyerId}/bids:
+*     post:
+*       description: create bids
+*       parameters:
+*         - in: path
+*           name: buyerId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: bids
+*           description: bids object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/Bids'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: bids created successfully
+ */
+
+ //
+/**
+* @swagger
+* path:
+*   /bids/{bidId}:
+*     put:
+*       description: modify bids
+*       parameters:
+*         - in: path
+*           name: bidId
+*           required: true
+*           schema:
+*              type: integer
+*         - name: bids
+*           description: bids object
+*           in:  body
+*           required: true
+*           type: string
+*           schema:
+*            $ref: '#/definitions/modifyBids'
+*       produces:
+*        - application/json
+*       responses:
+*         200:
+*           description: bid updated successfully
+ */
+
+
+  // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /bids/{bidId}:
+*     delete:
+*       description: get all bids belonging to an bidId
+*       parameters:
+*         - in: path
+*           name: bidId
+*           required: true
+*           schema:
+*              type: integer
+*       responses:
+*         200:
+*           description: items successfully deleted.
+*/
