@@ -1,4 +1,3 @@
-/* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
   const userDetails = sequelize.define('userDetails', {
@@ -39,22 +38,22 @@ module.exports = function(sequelize, DataTypes) {
       field: 'address'
     },
     mobNo: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
       field: 'mob_no'
     },
     altMobNo: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
       field: 'alt_mob_no'
     },
     lat: {
-      type: DataTypes.STRING,
+      type: DataTypes.DOUBLE,
       allowNull: false,
       field: 'lat'
     },
     long: {
-      type: DataTypes.STRING,
+      type: DataTypes.DOUBLE,
       allowNull: false,
       field: 'long'
     },

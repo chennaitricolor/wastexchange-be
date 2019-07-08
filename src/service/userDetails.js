@@ -189,9 +189,9 @@ module.exports = UserDetails;
  *       altMobNo:
  *         type: integer
  *       lat:
- *         type: string
+ *         type: number
  *       long:
- *         type: string
+ *         type: number
  *       persona:
  *         type: string
  *       address:

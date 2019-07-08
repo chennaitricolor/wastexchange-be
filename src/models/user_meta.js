@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       field: 'id'
     },
     mobileNo: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: false,
       field: 'mobile_no'
     },
