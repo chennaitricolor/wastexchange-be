@@ -4,13 +4,15 @@ const {
   UserDetails,
   verifyToken,
   Items,
-  Bids
+  Bids,
+  Otp
 } = require('../service');
 
 module.exports = (app) => {
   app.use('/health', health);
   app.post('/users/register', UserMeta.signUp); // API route for user to signup
   app.post('/users/login', UserMeta.login); 
+  app.post('/users/sendOtp', Otp.create); 
   app.get('/users/me', verifyToken, UserMeta.getUserIdByToken);
 
 

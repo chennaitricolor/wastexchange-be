@@ -3,6 +3,7 @@ const Joi = require('joi');
 require('dotenv').config();
 // Define validation for all the env vars
 const envVarsSchema = Joi.object({
+  AUTH_KEY: Joi.string(),
   NODE_ENV: Joi.string()
     .allow(['development', 'production'])
     .default('development'),
@@ -31,6 +32,7 @@ if (error) {
 }
 const {
   // eslint-disable-next-line
+  AUTH_KEY,
   NODE_ENV,
   NODE_CONFIG_ENV,
   PORT,
@@ -43,6 +45,7 @@ const {
 
 const config = {
   env: NODE_CONFIG_ENV.trim(),
+  authKey: AUTH_KEY.trim(),
   db : {
   host: DB_HOST.trim(),
   name: DB_NAME.trim(),

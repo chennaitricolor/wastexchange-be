@@ -1,12 +1,14 @@
 const  models = require('../models');
-const { userMeta } = models;
+const { userMeta , userOtp} = models;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 class UserMeta {
   static signUp(req, res) {
     var hashedPassword = bcrypt.hashSync(req.body.password, 8);
-    const { name, mobile_no, email_id, persona } = req.body
+    const { name, mobile_no, email_id, otp, persona } = req.body;
+      userOtp.findOne({ where: {emailId: email_id }, order: [['updatedAt', 'DESC']]}).then( (user) => {
+      if (otp == user.otp) {
       return userMeta
         .create({
           name,
@@ -26,6 +28,11 @@ class UserMeta {
           message: 'User successfully created',
           auth: true, token: token
         })})
+      }
+      else {
+        return res.status(401).send("invalid otp");
+      }
+    });
     }
 
     static login(req, res) {
@@ -81,6 +88,8 @@ module.exports = UserMeta;
  *          type: integer
  *       persona:
  *          type: string
+ *       otp:
+ *          type: integer
  *   loginSchema:
  *     properties:
  *       email: 

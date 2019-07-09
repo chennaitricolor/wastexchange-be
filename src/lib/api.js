@@ -37,7 +37,7 @@ function callGet(endpoint, params = {}) {
   return responsePromise;
 }
 
-function callPost(endpoint, body, params = {}) {
+function callPost(endpoint, body= {}, params = {}) {
   const headers = {
     'Content-Type': 'application/json',
   };
