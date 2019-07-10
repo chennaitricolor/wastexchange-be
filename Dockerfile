@@ -13,7 +13,6 @@ RUN npm install --production
 
 FROM node:10-alpine as production
 COPY --from=builder /home/app /home/app
-
 WORKDIR /home/app
 RUN npm install --production
 ENTRYPOINT  NODE_ENV=production node src/index.js
