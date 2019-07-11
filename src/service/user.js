@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 class UserMeta {
   static signUp(req, res) {
+    try {
     var hashedPassword = bcrypt.hashSync(req.body.password, 8);
     const { name, mobile_no, email_id, otp, persona } = req.body;
       userOtp.findOne({ where: {emailId: email_id }, order: [['updatedAt', 'DESC']]}).then( (user) => {
@@ -27,15 +28,22 @@ class UserMeta {
           success: true,
           message: 'User successfully created',
           auth: true, token: token
-        })})
+        })}).catch(e => {
+          res.status(500).send({error: e.message})
+        });
       }
       else {
         return res.status(401).send("invalid otp");
       }
     });
+  }
+  catch(e) {
+    res.status(500).send({error: e.message})
+  }
     }
 
     static login(req, res) {
+      try {
       userMeta.findOne({ where: {emailId: req.body.email }}).then( (user) => {
         if (!user) return res.status(404).send('No user found.');
         
@@ -54,11 +62,20 @@ class UserMeta {
     
     });
   }
+  catch(e) {
+    res.status(500).send({error: e.message})
+  }
+  }
   static getUserIdByToken(req, res) {
+    try {
     userMeta.findByPk(req.userId, {  attributes: {exclude: ['password']}}).then( (user) => {
       if (!user) return res.status(404).send("No user found.");
       res.status(200).send(user);
     });
+  }
+  catch(e) {
+    res.status(500).send({error: e.message})
+  }
   }
 }
 

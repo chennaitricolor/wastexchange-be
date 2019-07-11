@@ -7,6 +7,7 @@ const api = require('../lib/api');
 
 class Otp {
     static async create(req, res) {
+      try {
         const { 
             emailId,
             mobileNo
@@ -26,7 +27,13 @@ class Otp {
           })
           .then(userOtp => res.status(201).send({
             message: `Your otp details are created and sent`
-          }))
+          })).catch(e => {
+            res.status(500).send({error: e.message})
+          });
+        }
+        catch(e) {
+          res.status(500).send({error: e.message})
+        }
         }
 }
 

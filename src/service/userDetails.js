@@ -4,6 +4,7 @@ const { userDetails } = models;
 
 class UserDetails {
   static create(req, res) {
+    try {
     const { 
         city,
         pinCode,
@@ -32,7 +33,13 @@ class UserDetails {
       .then(user => res.status(201).send({
         message: `Your user details are created `,
         user
-      }))
+      })).catch(e => {
+        res.status(500).send({error: e.message})
+      });
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
     }
   static list(req, res) {
     return userDetails
@@ -41,19 +48,30 @@ class UserDetails {
   }
 
   static getUserDetailsByUserId(req, res) {
+    try {
     return userDetails
       .findAll({ where: { userId: req.params.userId}})
       .then(users => res.status(200).send(users));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
 
   static getUserDetailByDetailId(req, res) {
+    try {
     return userDetails
       .findByPk(req.params.detailId)
       .then(users => res.status(200).send(users));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
   static modify(req, res) {
+    try {
     const {     
         city,
         pinCode,
@@ -92,8 +110,13 @@ class UserDetails {
         .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
   static delete(req, res) {
+    try {
     return userDetails
       .findByPk(req.params.detailsId)
       .then(details => {
@@ -110,6 +133,10 @@ class UserDetails {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error))
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 }
 

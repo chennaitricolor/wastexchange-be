@@ -4,6 +4,7 @@ const { items } = models;
 
 class Items {
   static create(req, res) {
+    try {
     const { 
         details
          } = req.body
@@ -18,28 +19,50 @@ class Items {
       .then(items => res.status(201).send({
         message: `Your items details are created `,
         items
-      }))
+      })).catch(e => {
+        res.status(500).send({error: e.message})
+      });
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
     }
   static list(req, res) {
+    try {
     return items
       .findAll()
       .then(items => res.status(200).send(items));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
   static getItemBySellerId(req, res) {
+    try {
     return items
       .findOne({ where: {sellerId: req.params.sellerId }})
       .then(items => res.status(200).send(items));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
   static getItemById(req, res) {
+    try {
     return items
       .findByPk(req.params.itemId)
       .then(items => res.status(200).send(items));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
 
   static modify(req, res) {
+    try {
     const {     
       sellerId,
        details } = req.body
@@ -58,13 +81,20 @@ class Items {
                 sellerId:  updateditems.sellerId,
                 details: updateditems.details,
             }
-          })
+          }).catch(e => {
+            res.status(500).send({error: e.message})
+          });
         })
         .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
   static delete(req, res) {
+    try {
     return items
       .findByPk(req.params.itemId)
       .then(item => {
@@ -81,6 +111,10 @@ class Items {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error))
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 }
 

@@ -85,7 +85,6 @@ if (process.env.NODE_ENV !== 'test') {
  */
 process.on('uncaughtException', (err) => {
   logger.error(`uncaughtException :: ${err.stack}`);
-  process.exit(1);
 });
 
 /**
@@ -97,7 +96,6 @@ process.on('uncaughtException', (err) => {
  */
 process.on('unhandledRejection', (reason) => {
   logger.error(`unhandledRejection :: ${reason.stack || reason}`);
-  process.exit(1);
 });
 
 module.exports = app;

@@ -3,7 +3,9 @@ const  models = require('../models');
 const { bids } = models;
 
 class Bids {
+  
   static create(req, res) {
+    try {
     const { 
         sellerId,
         pDate,
@@ -22,34 +24,56 @@ class Bids {
         details,
         totalBid,
         status,
-        cretedAt: new Date(),
+        createdAt: new Date(),
         updatedAt: new Date()
       })
       .then(bids => res.status(201).send({
         message: `Your bids details are created `,
         bids
-      }))
+      })).catch(e => {
+        res.status(500).send({error: e.message})
+      });
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
     }
   static list(req, res) {
+    try{
     return bids
       .findAll()
       .then(bids => res.status(200).send(bids));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
   static getItemByBuyerId(req, res) {
+    try {
     return bids
       .findOne({ where: {buyerId: req.params.buyerId }})
       .then(bids => res.status(200).send(bids));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
   static getbidById(req, res) {
+    try {
     return bids
       .findByPk(req.params.bidId)
       .then(bids => res.status(200).send(bids));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 
 
   static modify(req, res) {
+    try {
     const {     
         buyerId,
         sellerId,
@@ -83,8 +107,13 @@ class Bids {
         .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
   static delete(req, res) {
+    try {
     return bids
       .findByPk(req.params.bidId)
       .then(bid => {
@@ -101,6 +130,10 @@ class Bids {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error))
+    }
+    catch(e) {
+      res.status(500).send({error: e.message})
+    }
   }
 }
 
