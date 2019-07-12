@@ -11,6 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const morgan = require('morgan');
 const routes = require('./routes');
 const { logger } = require('./lib');
+const cors = require('cors');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.use(cookieParser());
+app.use(cors());
 app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms'));
 
 const swaggerDefinition = {
