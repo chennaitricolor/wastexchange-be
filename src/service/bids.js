@@ -52,7 +52,7 @@ class Bids {
   static getItemByBuyerId(req, res) {
     try {
     return bids
-      .findOne({ where: {buyerId: req.params.buyerId }})
+      .findAll({ where: {buyerId: req.params.buyerId }})
       .then(bids => res.status(200).send(bids));
     }
     catch(e) {
