@@ -1,11 +1,13 @@
-const  models = require('../models');
-
-const { userDetails } = models;
+const models = require('../models');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { userDetails, userOtp } = models;
 
 class UserDetails {
   static create(req, res) {
     try {
-    const { 
+      var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      const {
         city,
         pinCode,
         address,
@@ -13,131 +15,183 @@ class UserDetails {
         altMobNo,
         lat,
         persona,
+        emailId,
+        name,
+        otp,
         long
-         } = req.body
-    const { userId } = req.params
-    return userDetails
-      .create({
-        userId,
-        city,
-        pinCode,
-        address,
-        mobNo,
-        altMobNo,
-        persona,
-        lat,
-        long,
-        cretedAt: new Date(),
-        updatedAt: new Date()
-      })
-      .then(user => res.status(201).send({
-        message: `Your user details are created `,
-        user
-      })).catch(e => {
-        res.status(500).send({error: e.message})
+      } = req.body
+      userOtp.findOne({ where: { emailId: emailId }, order: [['updatedAt', 'DESC']] }).then((user) => {
+        if (otp == user.otp) {
+          return userDetails
+            .create({
+              city,
+              emailId,
+              loginId: emailId,
+              password: hashedPassword,
+              name,
+              pinCode,
+              address,
+              mobNo,
+              altMobNo,
+              persona,
+              lat,
+              long,
+              cretedAt: new Date(),
+              updatedAt: new Date()
+            })
+            .then(userData => 
+              {  var token = jwt.sign({ id: userData.id }, 'secret cant tell', {
+                expiresIn: 86400 // expires in 24 hours
+              });
+              res.status(201).send({
+                success: true,
+                message: 'User successfully created',
+                auth: true, token: token
+              })}).catch(e => {
+              res.status(500).send({ error: e.message })
+            });
+        }
+        else {
+          return res.status(401).send("invalid otp");
+        }
       });
     }
-    catch(e) {
-      res.status(500).send({error: e.message})
+    catch (e) {
+      res.status(500).send({ error: e.message })
     }
-    }
+  }
   static list(req, res) {
     return userDetails
       .findAll()
       .then(users => res.status(200).send(users));
   }
 
-  static getUserDetailsByUserId(req, res) {
+  static getUserDetailById(req, res) {
     try {
-    return userDetails
-      .findAll({ where: { userId: req.params.userId}})
-      .then(users => res.status(200).send(users));
+      return userDetails
+        .findByPk(req.params.id)
+        .then(users => res.status(200).send(users));
     }
-    catch(e) {
-      res.status(500).send({error: e.message})
-    }
-  }
-
-
-  static getUserDetailByDetailId(req, res) {
-    try {
-    return userDetails
-      .findByPk(req.params.detailId)
-      .then(users => res.status(200).send(users));
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+    catch (e) {
+      res.status(500).send({ error: e.message })
     }
   }
 
   static modify(req, res) {
     try {
-    const {     
+      var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      const {
         city,
         pinCode,
         address,
+        emailId,
+        name,
         mobNo,
         altMobNo,
         lat,
         long } = req.body
-    return userDetails
-      .findByPk(req.params.detailsId)
-      .then((details) => {
-        details.update({
+      return userDetails
+        .findByPk(req.params.id)
+        .then((details) => {
+          details.update({
             city: city || details.city,
             pinCode: pinCode || details.pinCode,
             address: address || details.address,
+            emailId: emailId || details.emailId,
+            loginId: emailId || details.loginId,
+            password: hashedPassword || details.password,
+            name: name || details.name,
             mobNo: mobNo || details.mobNo,
             altMobNo: altMobNo || details.altMobNo,
             lat: lat || details.lat,
             long: long || details.long,
             updatedAt: new Date()
-        })
-        .then((updateduserDetails) => {
-          res.status(200).send({
-            message: 'userDetails updated successfully',
-            data: {
-                city: city || updateduserDetails.city,
-                pinCode: pinCode || updateduserDetails.pinCode,
-                address: address || updateduserDetails.address,
-                mobNo: mobNo || updateduserDetails.mobNo,
-                altMobNo: altMobNo || updateduserDetails.altMobNo,
-                lat: lat || updateduserDetails.lat,
-                long: long || updateduserDetails.long,
-            }
           })
+            .then((updateduserDetails) => {
+              res.status(200).send({
+                message: 'userDetails updated successfully',
+                data: {
+                  city: city || updateduserDetails.city,
+                  pinCode: pinCode || updateduserDetails.pinCode,
+                  address: address || updateduserDetails.address,
+                  mobNo: mobNo || updateduserDetails.mobNo,
+                  altMobNo: altMobNo || updateduserDetails.altMobNo,
+                  emailId: emailId || details.emailId,
+                  loginId: emailId || details.loginId,
+                  name: name || details.name,
+                  lat: lat || updateduserDetails.lat,
+                  long: long || updateduserDetails.long,
+                }
+              })
+            })
+            .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error));
     }
-    catch(e) {
-      res.status(500).send({error: e.message})
+    catch (e) {
+      res.status(500).send({ error: e.message })
     }
   }
   static delete(req, res) {
     try {
-    return userDetails
-      .findByPk(req.params.detailsId)
-      .then(details => {
-        if(!details) {
-          return res.status(400).send({
-          message: 'userDetails Not Found',
-          });
-        }
-        return details
-          .destroy()
-          .then(() => res.status(200).send({
-            message: 'userDetails successfully deleted'
-          }))
-          .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error))
+      return userDetails
+        .findByPk(req.params.id)
+        .then(details => {
+          if (!details) {
+            return res.status(400).send({
+              message: 'userDetails Not Found',
+            });
+          }
+          return details
+            .destroy()
+            .then(() => res.status(200).send({
+              message: 'userDetails successfully deleted'
+            }))
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(400).send(error))
     }
-    catch(e) {
-      res.status(500).send({error: e.message})
+    catch (e) {
+      res.status(500).send({ error: e.message })
     }
   }
+
+  static login(req, res) {
+    try {
+      userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
+        if (!user) return res.status(404).send('No user found.');
+
+        // check if the password is valid
+        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+        // if user is found and password is valid
+        // create a token
+        var token = jwt.sign({ id: user.id }, 'secret cant tell', {
+          expiresIn: 86400 // expires in 24 hours
+        });
+
+        // return the information including token as JSON
+        res.status(200).send({ auth: true, token: token });
+
+      });
+    }
+    catch (e) {
+      res.status(500).send({ error: e.message })
+    }
+  }
+  static getUserIdByToken(req, res) {
+    try {
+      userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then((user) => {
+        if (!user) return res.status(404).send("No user found.");
+        res.status(200).send(user);
+      });
+    }
+    catch (e) {
+      res.status(500).send({ error: e.message })
+    }
+  }
+
 }
 
 module.exports = UserDetails;
@@ -147,7 +201,7 @@ module.exports = UserDetails;
 /**
 * @swagger
 * path:
-*   /userdetails:
+*   /users:
 *     get:
 *       description: get all userdetails
 *       responses:
@@ -159,30 +213,12 @@ module.exports = UserDetails;
 /**
 * @swagger
 * path:
-*   /userdetails/{detailsId}:
+*   /users/{id}:
 *     get:
-*       description: get user details belonging to an detailsId
+*       description: get user details belonging to an id
 *       parameters:
 *         - in: path
-*           name: detailsId
-*           required: true
-*           schema:
-*              type: integer
-*       responses:
-*         200:
-*           description: user details.
-*/
-
- // Swagger Definitions
-/**
-* @swagger
-* path:
-*   /users/{userId}/userdetails:
-*     get:
-*       description: get all user details
-*       parameters:
-*         - in: path
-*           name: userId
+*           name: id
 *           required: true
 *           schema:
 *              type: integer
@@ -202,12 +238,22 @@ module.exports = UserDetails;
  *       - pinCode
  *       - address
  *       - mobNo
+ *       - name
+ *       - password
+ *       - emailId
+ *       - otp
  *       - altMobNo
  *       - lat
  *       - persona
  *       - long
  *     properties:
  *       city:
+ *         type: string
+ *       emailId:
+ *         type: string
+ *       password:
+ *         type: string
+ *       name:
  *         type: string
  *       pinCode:
  *         type: integer
@@ -223,7 +269,9 @@ module.exports = UserDetails;
  *         type: string
  *       address:
  *         type: string
- *         
+ *       otp:
+ *         type: number
+ *
  *   modifyUserDetails:
  *     type: object
  *     required:
@@ -232,6 +280,9 @@ module.exports = UserDetails;
  *       - address
  *       - mobNo
  *       - altMobNo
+ *       - name
+ *       - password
+ *       - emailId
  *       - lat
  *       - long
  *     properties:
@@ -247,47 +298,96 @@ module.exports = UserDetails;
  *         type: string
  *       long:
  *         type: string
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
+ *       name:
+ *         type: string
  *       address:
  *         type: string
+ *   loginSchema:
+ *     type: object
+ *     properties:
+ *       loginId:
+ *          type: string
+ *       password:
+ *          type: string
  */
 
-//
+// Swagger Definitions
 /**
 * @swagger
 * path:
-*   /users/{userId}/userdetails:
+*   /users/register:
 *     post:
-*       description: create userDetails
-*       parameters:
-*         - in: path
-*           name: userId
-*           required: true
-*           schema:
-*              type: integer
-*         - name: details
-*           description: details object
-*           in:  body
-*           required: true
-*           type: string
-*           schema:
-*            $ref: '#/definitions/UserDetails'
+*       description: signup (create new user meta)
 *       produces:
 *        - application/json
+*       parameters:
+*        - name: user
+*          description: User object
+*          in:  body
+*          required: true
+*          type: string
+*          schema:
+*           $ref: '#/definitions/UserDetails'
 *       responses:
-*         200:
-*           description: details created successfully
- */
+*         201:
+*           description: user created successfully
 
- //
+*/
+//
+
+
 /**
 * @swagger
 * path:
-*   /userdetails/{detailsId}:
+*   /users/login:
+*     post:
+*       description: login
+*       produces:
+*        - application/json
+*       parameters:
+*        - name: user
+*          description: User object
+*          in:  body
+*          required: true
+*          type: string
+*          schema:
+*           $ref: '#/definitions/loginSchema'
+*       responses:
+*         200:
+*           description: user logged in  successfully
+ */
+
+
+ // Swagger Definitions
+/**
+* @swagger
+* path:
+*   /users/me:
+*     get:
+*       description: get user meta with jwt
+*       parameters:
+*          - in: header
+*            name: x-access-token
+*            required: true
+*       responses:
+*         200:
+*           description: user details.
+*/
+
+
+/**
+* @swagger
+* path:
+*   /users/{id}:
 *     put:
 *       description: modify userdetails
 *       parameters:
 *         - in: path
-*           name: detailsId
+*           name: id
 *           required: true
 *           schema:
 *              type: integer
@@ -310,12 +410,12 @@ module.exports = UserDetails;
 /**
 * @swagger
 * path:
-*   /userdetails/{detailsId}:
+*   /users/{id}:
 *     delete:
-*       description: delete all userdetails belonging to an detailsId
+*       description: delete all userdetails belonging to an id
 *       parameters:
 *         - in: path
-*           name: detailsId
+*           name: id
 *           required: true
 *           schema:
 *              type: integer

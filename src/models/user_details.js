@@ -1,21 +1,13 @@
+/* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  const userDetails = sequelize.define('userDetails', {
+  return sequelize.define('userDetails', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
       field: 'id'
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'user_meta',
-        key: 'id'
-      },
-      field: 'user_id'
     },
     city: {
       type: DataTypes.STRING,
@@ -40,12 +32,23 @@ module.exports = function(sequelize, DataTypes) {
     mobNo: {
       type: DataTypes.BIGINT,
       allowNull: true,
+      unique: true,
       field: 'mob_no'
     },
     altMobNo: {
       type: DataTypes.BIGINT,
       allowNull: true,
       field: 'alt_mob_no'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'updated_at'
     },
     lat: {
       type: DataTypes.DOUBLE,
@@ -57,25 +60,29 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'long'
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'created_at'
+    emailId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      field: 'email_id'
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'updated_at'
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'password'
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'name'
+    },
+    loginId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      field: 'loginId'
     }
   }, {
     tableName: 'user_details'
   });
-  userDetails.associate = (models) => {
-    // associations can be defined here
-    userDetails.belongsTo(models.userMeta, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
-  };
-  return userDetails;
 };

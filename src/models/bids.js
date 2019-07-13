@@ -39,6 +39,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'total_bid'
     },
+    contactName: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      field: 'contact_name'
+  },
     status: {
       type: DataTypes.STRING,
       allowNull: true,

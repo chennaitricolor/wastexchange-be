@@ -13,7 +13,6 @@ class Otp {
             mobileNo
              } = req.body;
              const generatedOtp = Math.floor(Math.random() * 899999 + 100000);
-             console.log("generatedOtp", generatedOtp);
              const mobileNumber = `91${mobileNo}`
        const response =  await api.post(`https://control.msg91.com/api/sendotp.php?otp=${generatedOtp}&sender=CTIFLG&mobile=${mobileNumber}&authkey=${config.authKey}`);
        await api.post(`https://control.msg91.com/api/sendmailotp.php?otp=${generatedOtp}&email=${emailId}&authkey=${config.authKey}`)

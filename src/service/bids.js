@@ -1,7 +1,7 @@
 const  models = require('../models');
 
-const { bids } = models;
-
+const { bids, items } = models;
+const R =require('ramda');
 class Bids {
   
   static create(req, res) {
@@ -10,6 +10,7 @@ class Bids {
         sellerId,
         pDate,
         pTime,
+        contactName,
         details,
         totalBid,
         status,
@@ -19,6 +20,7 @@ class Bids {
       .create({
         buyerId,
         sellerId,
+        contactName,
         pDate:  Date.parse(pDate, "dd/mm/yyyy"),
         pTime,
         details,
@@ -79,6 +81,7 @@ class Bids {
         sellerId,
         pDate,
         pTime,
+        contactName,
         details,
         totalBid,
         status, } = req.body
@@ -88,6 +91,7 @@ class Bids {
         item.update({
             sellerId: sellerId || bids.sellerId,
             details: details || bids.details,
+            contactName: contactName || bids.contactName,
             buyerId: buyerId || bids.buyerId,
             pDate: Date.parse(pDate, "dd/mm/yyyy") || bids.pDate,
             pTime: pTime || bids.pTime,
@@ -96,6 +100,19 @@ class Bids {
             updatedAt: new Date()
         })
         .then((updatedbids) => {
+          if(status && status.toLower() === "approved") {
+              items.find({ where: {sellerId: updatedbids.sellerId }})
+              .then((item) => {
+                itemDetails =item.details;
+                for(key in Object.keys(details)) {
+                  itemDetails[key].quantity = itemDetails[key].quantity - details[key].quantity;
+                }
+                item.update({
+                  details: itemDetails,
+                  updatedAt: new Date()
+              })
+              })
+          }
           res.status(200).send({
             message: 'bids updated successfully',
             data: {
@@ -198,6 +215,7 @@ module.exports = Bids;
  *       - sellerId
  *       - pDate
  *       - pTime
+ *       - contactName
  *       - details
  *       - totalBid
  *       - status
@@ -212,6 +230,8 @@ module.exports = Bids;
  *         type: date
  *       pTime:
  *         type: time
+ *       contactName:
+ *         type: string
  *       status:
  *         type: string
  *         
@@ -222,6 +242,7 @@ module.exports = Bids;
  *       - buyerId
  *       - pDate
  *       - pTime
+ *       - contactName
  *       - details
  *       - totalBid
  *       - status
@@ -234,6 +255,8 @@ module.exports = Bids;
  *         type: integer
  *       totalBid:
  *         type: integer
+ *       contactName:
+ *         type: string
  *       pDate:
  *         type: date
  *       pTime:
