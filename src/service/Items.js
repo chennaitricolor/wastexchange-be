@@ -13,7 +13,7 @@ class Items {
       .create({
         sellerId,
         details,
-        cretedAt: new Date(),
+        createdAt: new Date(),
         updatedAt: new Date()
       })
       .then(items => res.status(201).send({

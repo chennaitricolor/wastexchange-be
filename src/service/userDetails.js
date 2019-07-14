@@ -1,7 +1,7 @@
 const models = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { userDetails, userOtp } = models;
+const { items, userDetails, userOtp } = models;
 
 class UserDetails {
   static create(req, res) {
@@ -36,11 +36,18 @@ class UserDetails {
               persona,
               lat,
               long,
-              cretedAt: new Date(),
+              createdAt: new Date(),
               updatedAt: new Date()
             })
             .then(userData => 
-              {  var token = jwt.sign({ id: userData.id }, 'secret cant tell', {
+              {  // an empty insert to items table to handle maps rendering
+                items.create({
+                  sellerId: userData.id,
+                  details: {},
+                  createdAt: new Date(),
+                  updatedAt: new Date()
+                });
+                var token = jwt.sign({ id: userData.id }, 'secret cant tell', {
                 expiresIn: 86400 // expires in 24 hours
               });
               res.status(201).send({

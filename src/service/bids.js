@@ -100,7 +100,7 @@ class Bids {
             updatedAt: new Date()
         })
         .then((updatedbids) => {
-          if(status && status.toLower() === "approved") {
+          if(status && status.toLowerCase() === "approved") {
               items.find({ where: {sellerId: updatedbids.sellerId }})
               .then((item) => {
                 itemDetails =item.details;
@@ -110,7 +110,7 @@ class Bids {
                 item.update({
                   details: itemDetails,
                   updatedAt: new Date()
-              })
+              });
               })
           }
           res.status(200).send({
