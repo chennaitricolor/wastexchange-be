@@ -19,15 +19,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'buyer_id'
     },
-    pDate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      field: 'p_date'
-    },
-    pTime: {
-      type: DataTypes.TIME,
-      allowNull: false,
-      field: 'p_time'
+    pDateTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'p_date_time'
     },
     details: {
       type: DataTypes.JSON,

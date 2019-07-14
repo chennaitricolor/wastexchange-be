@@ -8,8 +8,7 @@ class Bids {
     try {
     const { 
         sellerId,
-        pDate,
-        pTime,
+        pDateTime,
         contactName,
         details,
         totalBid,
@@ -21,8 +20,7 @@ class Bids {
         buyerId,
         sellerId,
         contactName,
-        pDate:  Date.parse(pDate, "dd/mm/yyyy"),
-        pTime,
+        pDateTime,
         details,
         totalBid,
         status,
@@ -79,8 +77,7 @@ class Bids {
     const {     
         buyerId,
         sellerId,
-        pDate,
-        pTime,
+        pDateTime,
         contactName,
         details,
         totalBid,
@@ -93,8 +90,7 @@ class Bids {
             details: details || bids.details,
             contactName: contactName || bids.contactName,
             buyerId: buyerId || bids.buyerId,
-            pDate: Date.parse(pDate, "dd/mm/yyyy") || bids.pDate,
-            pTime: pTime || bids.pTime,
+            pDateTime: pDateTime || bids.pDateTime,
             totalBid: totalBid || bids.totalBid,
             status: status || bids.status,
             updatedAt: new Date()
@@ -213,8 +209,7 @@ module.exports = Bids;
  *     type: object
  *     required:
  *       - sellerId
- *       - pDate
- *       - pTime
+ *       - pDateTime
  *       - contactName
  *       - details
  *       - totalBid
@@ -226,10 +221,8 @@ module.exports = Bids;
  *         type: integer
  *       totalBid:
  *         type: integer
- *       pDate:
+ *       pDateTime:
  *         type: date
- *       pTime:
- *         type: time
  *       contactName:
  *         type: string
  *       status:
@@ -240,8 +233,7 @@ module.exports = Bids;
  *     required:
  *       - sellerId
  *       - buyerId
- *       - pDate
- *       - pTime
+ *       - pDateTime
  *       - contactName
  *       - details
  *       - totalBid
@@ -257,10 +249,8 @@ module.exports = Bids;
  *         type: integer
  *       contactName:
  *         type: string
- *       pDate:
+ *       pDateTime:
  *         type: date
- *       pTime:
- *         type: time
  *       status:
  *         type: string
  */
