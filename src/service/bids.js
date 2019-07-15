@@ -97,10 +97,10 @@ class Bids {
         })
         .then((updatedbids) => {
           if(status && status.toLowerCase() === "approved") {
-              items.find({ where: {sellerId: updatedbids.sellerId }})
+              items.findOne({ where: {sellerId: updatedbids.sellerId }})
               .then((item) => {
-                itemDetails =item.details;
-                for(key in Object.keys(details)) {
+                var itemDetails =item.details;
+                for(var key of Object.keys(details)) {
                   itemDetails[key].quantity = itemDetails[key].quantity - details[key].quantity;
                 }
                 item.update({
