@@ -101,7 +101,7 @@ class Bids {
               .then((item) => {
                 var itemDetails =item.details;
                 for(var key of Object.keys(details)) {
-                  itemDetails[key].quantity = itemDetails[key].quantity - details[key].quantity;
+                  itemDetails[key].quantity = itemDetails[key].quantity - details[key].bidQuantity;
                 }
                 item.update({
                   details: itemDetails,
