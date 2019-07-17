@@ -56,6 +56,8 @@
     "express": "^4.16.3",
     "firebase-admin": "^8.0.0",
     "firebase-functions": "^3.0.0",
+    "http": "0.0.0",
+    "https": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.6.0",
     "json2csv": "^4.3.1",
