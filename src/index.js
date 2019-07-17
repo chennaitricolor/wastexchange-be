@@ -11,6 +11,24 @@ const swaggerUi = require('swagger-ui-express');
 const morgan = require('morgan');
 const routes = require('./routes');
 const { logger } = require('./lib');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+
+
+if(process.env.NODE_ENV !== 'dev') {
+// Certificate
+const privateKey = fs.readFileSync('/mnt/letsencrypt/live/data.indiawasteexchange.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/mnt/letsencrypt/live/data.indiawasteexchange.com/cert.pem', 'utf8');
+const ca = fs.readFileSync('/mnt/letsencrypt/live/data.indiawasteexchange.com/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+}
+
 const cors = require('cors');
 
 const app = express();
@@ -67,15 +85,30 @@ const errorHandler = (err, req, res, next) => {
 };
 
 app.use(errorHandler);
+const httpServer = http.createServer(app);
 
+if(process.env.NODE_ENV !== 'dev') {
+const httpsServer = https.createServer(credentials, app);
+}
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, (err) => {
-    if (err) {
-      logger.error(`${err.stack}`);
-      return;
-    }
-    logger.info(`Listening on port ${port}`);
-  });
+
+
+httpServer.listen(port, () => {
+	logger.info(`Listening on port ${port}`);
+});
+
+if(process.env.NODE_ENV !== 'dev') {
+httpsServer.listen(443, () => {
+	logger.info('HTTPS Server running on port 443');
+});
+}
+  // app.listen(port, (err) => {
+  //   if (err) {
+  //     logger.error(`${err.stack}`);
+  //     return;
+  //   }
+  //   logger.info(`Listening on port ${port}`);
+  // });
 }
 
 /**

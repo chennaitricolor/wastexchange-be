@@ -18,3 +18,4 @@ WORKDIR /home/app
 RUN npm install --production
 ENTRYPOINT  NODE_ENV=production node src/index.js
 EXPOSE 80
+EXPOSE 443
