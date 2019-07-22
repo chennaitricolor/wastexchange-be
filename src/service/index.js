@@ -4,11 +4,12 @@ const verifyToken = require('./VerifyToken');
 const Items = require('./Items');
 const Bids = require('./bids');
 const Otp = require('./otp');
+
 module.exports = {
   UserDetails,
   health,
   verifyToken,
   Items,
   Bids,
-  Otp
+  Otp,
 };

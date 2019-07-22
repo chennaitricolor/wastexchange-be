@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
-const fs = require( 'fs');
-const path =require( 'path');
-const  _ = require('lodash');
-const  config = require('../config');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+const config = require('../config');
 
 const db = {};
 
@@ -13,10 +13,10 @@ const sequelize = new Sequelize(
   config.db.pwd, {
     dialect: 'postgres',
     host: config.db.host,
-    port: config.db.port
-  }
+    port: config.db.port,
+  },
 );
-//sequelize.sync();
+// sequelize.sync();
 const basename = path.basename(module.filename);
 const modelsDir = path.normalize(`${__dirname}/../models`);
 

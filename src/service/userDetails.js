@@ -1,13 +1,14 @@
-const models = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const models = require('../models');
+
 const { items, userDetails, userOtp } = models;
 
 class UserDetails {
   static create(req, res) {
     try {
       // TODO: Does this mean that the password is sent unencrypted from the frontend?
-      var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      const hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const {
         city,
         pinCode,
@@ -19,9 +20,9 @@ class UserDetails {
         emailId,
         name,
         otp,
-        long
-      } = req.body
-      userOtp.findOne({ where: { emailId: emailId }, order: [['updatedAt', 'DESC']] }).then((user) => {
+        long,
+      } = req.body;
+      userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then((user) => {
         if (otp == user.otp) {
           return userDetails
             .create({
@@ -38,38 +39,38 @@ class UserDetails {
               lat,
               long,
               createdAt: new Date(),
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
-            .then(userData =>
-              {
-                // TODO: This seems like a hack?
-                // an empty insert to items table to handle maps rendering
-                items.create({
-                  sellerId: userData.id,
-                  details: {},
-                  createdAt: new Date(),
-                  updatedAt: new Date()
-                });
-                var token = jwt.sign({ id: userData.id }, 'secret cant tell', {
-                expiresIn: 86400 // expires in 24 hours
+            .then((userData) => {
+              // TODO: This seems like a hack?
+              // an empty insert to items table to handle maps rendering
+              items.create({
+                sellerId: userData.id,
+                details: {},
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              });
+              const token = jwt.sign({ id: userData.id }, 'secret cant tell', {
+                expiresIn: 86400, // expires in 24 hours
               });
               res.status(201).send({
                 success: true,
                 message: 'User successfully created',
-                auth: true, token: token
-              })}).catch(e => {
-              res.status(500).send({ error: e.message })
+                auth: true,
+                token,
+              });
+            }).catch((e) => {
+              res.status(500).send({ error: e.message });
             });
         }
-        else {
-          return res.status(401).send("invalid otp");
-        }
+
+        return res.status(401).send('invalid otp');
       });
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
+
   static list(req, res) {
     return userDetails
       .findAll()
@@ -82,16 +83,15 @@ class UserDetails {
       return userDetails
         .findByPk(req.params.id)
         .then(users => res.status(200).send(users));
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 
   static modify(req, res) {
     try {
       // TODO: Does this mean that the password is sent unencrypted from the frontend?
-      var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+      const hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const {
         city,
         pinCode,
@@ -101,7 +101,8 @@ class UserDetails {
         mobNo,
         altMobNo,
         lat,
-        long } = req.body
+        long,
+      } = req.body;
       return userDetails
         .findByPk(req.params.id)
         .then((details) => {
@@ -117,7 +118,7 @@ class UserDetails {
             altMobNo: altMobNo || details.altMobNo,
             lat: lat || details.lat,
             long: long || details.long,
-            updatedAt: new Date()
+            updatedAt: new Date(),
           })
             .then((updateduserDetails) => {
               res.status(200).send({
@@ -134,38 +135,37 @@ class UserDetails {
                   name: name || details.name,
                   lat: lat || updateduserDetails.lat,
                   long: long || updateduserDetails.long,
-                }
-              })
+                },
+              });
             })
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error));
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
+
   static delete(req, res) {
     try {
       return userDetails
         .findByPk(req.params.id)
-        .then(details => {
+        .then((details) => {
           if (!details) {
-            return res.status(400).send({
+            return res.status(404).send({
               message: 'userDetails Not Found',
             });
           }
           return details
             .destroy()
             .then(() => res.status(200).send({
-              message: 'userDetails successfully deleted'
+              message: 'userDetails successfully deleted',
             }))
             .catch(error => res.status(400).send(error));
         })
-        .catch(error => res.status(400).send(error))
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+        .catch(error => res.status(400).send(error));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 
@@ -175,42 +175,39 @@ class UserDetails {
         if (!user) return res.status(404).send('No user found.');
 
         // check if the password is valid
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
 
         // if user is found and password is valid
         // create a token
-        var token = jwt.sign({ id: user.id }, 'secret cant tell', {
-          expiresIn: 86400 // expires in 24 hours
+        const token = jwt.sign({ id: user.id }, 'secret cant tell', {
+          expiresIn: 86400, // expires in 24 hours
         });
 
         // return the information including token as JSON
-        res.status(200).send({ auth: true, token: token });
-
+        res.status(200).send({ auth: true, token });
       });
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
+
   static getUserIdByToken(req, res) {
     try {
       userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then((user) => {
-        if (!user) return res.status(404).send("No user found.");
+        if (!user) return res.status(404).send('No user found.');
         res.status(200).send(user);
       });
-    }
-    catch (e) {
-      res.status(500).send({ error: e.message })
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
-
 }
 
 module.exports = UserDetails;
 
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -222,7 +219,7 @@ module.exports = UserDetails;
 *           description: user details.
 */
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -375,7 +372,7 @@ module.exports = UserDetails;
  */
 
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -419,7 +416,7 @@ module.exports = UserDetails;
  */
 
 
-  // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:

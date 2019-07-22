@@ -21,7 +21,7 @@ const envVarsSchema = Joi.object({
   DB_PORT: Joi.string(),
   DB_NAME: Joi.string(),
   DB_PWD: Joi.string(),
-  DB_USER: Joi.string()
+  DB_USER: Joi.string(),
 })
   .unknown()
   .required();
@@ -40,18 +40,18 @@ const {
   DB_NAME,
   DB_PORT,
   DB_PWD,
-  DB_USER
+  DB_USER,
 } = envVars;
 
 const config = {
   env: NODE_CONFIG_ENV.trim(),
   authKey: AUTH_KEY.trim(),
-  db : {
-  host: DB_HOST.trim(),
-  name: DB_NAME.trim(),
-  port : DB_PORT.trim(),
-  pwd: DB_PWD.trim(),
-  user: DB_USER.trim(),
+  db: {
+    host: DB_HOST.trim(),
+    name: DB_NAME.trim(),
+    port: DB_PORT.trim(),
+    pwd: DB_PWD.trim(),
+    user: DB_USER.trim(),
   },
   port: PORT,
   logPrefix: 'CHENNAI :: waste-management-service  :: ',

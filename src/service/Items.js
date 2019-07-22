@@ -1,128 +1,125 @@
-const  models = require('../models');
+const models = require('../models');
 
 const { items } = models;
 
 class Items {
   static create(req, res) {
     try {
-    const { 
-        details
-         } = req.body
-    const { sellerId } = req.params
-    return items
-      .create({
-        sellerId,
+      const {
         details,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })
-      .then(items => res.status(201).send({
-        message: `Your items details are created `,
-        items
-      })).catch(e => {
-        res.status(500).send({error: e.message})
-      });
+      } = req.body;
+      const { sellerId } = req.params;
+      return items
+        .create({
+          sellerId,
+          details,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .then(items => res.status(201).send({
+          message: 'Your items details are created ',
+          items,
+        })).catch((e) => {
+          res.status(500).send({ error: e.message });
+        });
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
-    catch(e) {
-      res.status(500).send({error: e.message})
-    }
-    }
+  }
+
   static list(req, res) {
     try {
-    return items
-      .findAll()
-      .then(items => res.status(200).send(items));
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+      return items
+        .findAll()
+        .then(items => res.status(200).send(items));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 
   static getItemBySellerId(req, res) {
     try {
     // TODO: Is the 'findOne' the correct call to make?
-    return items
-      .findOne({ where: {sellerId: req.params.sellerId }})
-      .then(items => res.status(200).send(items));
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+      return items
+        .findOne({ where: { sellerId: req.params.sellerId } })
+        .then(items => res.status(200).send(items));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 
   static getItemById(req, res) {
     try {
-    return items
-      .findByPk(req.params.itemId)
-      .then(items => res.status(200).send(items));
+      return items
+        .findByPk(req.params.itemId)
+        .then(items => res.status(200).send(items));
       // TODO: How are we handling 'not found' record?
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 
 
   static modify(req, res) {
     try {
-    const {     
-      sellerId,
-       details } = req.body
-    return items
-      .findByPk(req.params.itemId)
-      .then((item) => {
-        item.update({
+      const {
+        sellerId,
+        details,
+      } = req.body;
+      return items
+        .findByPk(req.params.itemId)
+        .then((item) => {
+          item.update({
             sellerId: sellerId || items.sellerId,
             details: details || items.details,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+          })
+            .then((updateditems) => {
+              res.status(200).send({
+                message: 'items updated successfully',
+                data: {
+                  sellerId: updateditems.sellerId,
+                  details: updateditems.details,
+                },
+              }).catch((e) => {
+                res.status(500).send({ error: e.message });
+              });
+            })
+            .catch(error => res.status(400).send(error));
         })
-        .then((updateditems) => {
-          res.status(200).send({
-            message: 'items updated successfully',
-            data: {
-                sellerId:  updateditems.sellerId,
-                details: updateditems.details,
-            }
-          }).catch(e => {
-            res.status(500).send({error: e.message})
-          });
-        })
-        .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error));
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+        .catch(error => res.status(404).send(error));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
+
   static delete(req, res) {
     try {
-    return items
-      .findByPk(req.params.itemId)
-      .then(item => {
-        if(!item) {
-          return res.status(400).send({
-          message: 'items Not Found',
-          });
-        }
-        return item
-          .destroy()
-          .then(() => res.status(200).send({
-            message: 'items successfully deleted'
-          }))
-          .catch(error => res.status(400).send(error));
-      })
-      .catch(error => res.status(400).send(error))
-    }
-    catch(e) {
-      res.status(500).send({error: e.message})
+      return items
+        .findByPk(req.params.itemId)
+        .then((item) => {
+          if (!item) {
+            return res.status(400).send({
+              message: 'items Not Found',
+            });
+          }
+          return item
+            .destroy()
+            .then(() => res.status(200).send({
+              message: 'items successfully deleted',
+            }))
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(404).send(error));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
     }
   }
 }
 
 module.exports = Items;
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -134,7 +131,7 @@ module.exports = Items;
 *           description: item details.
 */
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -152,7 +149,7 @@ module.exports = Items;
 *           description: item details.
 */
 
- // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
@@ -183,7 +180,7 @@ module.exports = Items;
  *         type: json
  *   modifyItems:
  *     properties:
- *       sellerId: 
+ *       sellerId:
  *          type: integer
  *       details:
  *          type: json
@@ -217,7 +214,7 @@ module.exports = Items;
 *           description: item created  successfully
  */
 
- //
+//
 /**
 * @swagger
 * path:
@@ -245,7 +242,7 @@ module.exports = Items;
  */
 
 
-  // Swagger Definitions
+// Swagger Definitions
 /**
 * @swagger
 * path:
