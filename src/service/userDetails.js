@@ -6,6 +6,7 @@ const { items, userDetails, userOtp } = models;
 class UserDetails {
   static create(req, res) {
     try {
+      // TODO: Does this mean that the password is sent unencrypted from the frontend?
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const {
         city,
@@ -39,8 +40,10 @@ class UserDetails {
               createdAt: new Date(),
               updatedAt: new Date()
             })
-            .then(userData => 
-              {  // an empty insert to items table to handle maps rendering
+            .then(userData =>
+              {
+                // TODO: This seems like a hack?
+                // an empty insert to items table to handle maps rendering
                 items.create({
                   sellerId: userData.id,
                   details: {},
@@ -75,6 +78,7 @@ class UserDetails {
 
   static getUserDetailById(req, res) {
     try {
+      // TODO: How are we handling 'not found' record?
       return userDetails
         .findByPk(req.params.id)
         .then(users => res.status(200).send(users));
@@ -86,6 +90,7 @@ class UserDetails {
 
   static modify(req, res) {
     try {
+      // TODO: Does this mean that the password is sent unencrypted from the frontend?
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const {
         city,
@@ -118,6 +123,7 @@ class UserDetails {
               res.status(200).send({
                 message: 'userDetails updated successfully',
                 data: {
+                  // TODO: Since the 'updateduserDetails' object has all the updated fields, can't we not do the '||' style here?
                   city: city || updateduserDetails.city,
                   pinCode: pinCode || updateduserDetails.pinCode,
                   address: address || updateduserDetails.address,

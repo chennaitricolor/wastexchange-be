@@ -40,6 +40,7 @@ class Items {
 
   static getItemBySellerId(req, res) {
     try {
+    // TODO: Is the 'findOne' the correct call to make?
     return items
       .findOne({ where: {sellerId: req.params.sellerId }})
       .then(items => res.status(200).send(items));
@@ -54,6 +55,7 @@ class Items {
     return items
       .findByPk(req.params.itemId)
       .then(items => res.status(200).send(items));
+      // TODO: How are we handling 'not found' record?
     }
     catch(e) {
       res.status(500).send({error: e.message})
