@@ -9,11 +9,13 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       field: 'id'
     },
+    // TODO: Doesn't the 'sellerId' need to be a foreign-key?
     sellerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'seller_id'
     },
+    // TODO: Doesn't the 'buyerId' need to be a foreign-key?
     buyerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -29,6 +31,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'details'
     },
+    // TODO: Doesn't the 'totalBid' need to accommodate paise? (Looking at it from a tax perspective)?
     totalBid: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -44,16 +47,19 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'status'
     },
+    // TODO: Doesn't the 'createdAt' need to be non-nullable?
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'created_at'
     },
+    // TODO: Doesn't the 'updatedAt' need to be non-nullable?
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'updated_at'
     }
+    // TODO: Are we missing the 'createdBy' and 'updatedBy' audit columns?
   }, {
     tableName: 'bids'
   });

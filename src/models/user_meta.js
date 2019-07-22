@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       field: 'id'
     },
+    // TODO: Why do we need a THIRD mobile number (there are already 2 present in the user model)?
     mobileNo: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -50,11 +51,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'persona'
     },
+    // TODO: Doesn't the 'createdAt' need to be non-nullable?
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'created_at'
     },
+    // TODO: Doesn't the 'updatedAt' need to be non-nullable?
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: true,
@@ -65,6 +68,7 @@ module.exports = function(sequelize, DataTypes) {
   });
   userMeta.associate = (models) => {
     // associations can be defined here
+    // TODO: When a 'user' is deleted, how should this association be handled? nulled out / deleted / ?
     userMeta.hasMany(models.userDetails, {
       foreignKey: 'userId',
     });
