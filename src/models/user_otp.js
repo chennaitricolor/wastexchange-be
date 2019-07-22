@@ -24,11 +24,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'mobile_no'
     },
+    // TODO: Doesn't the 'createdAt' need to be non-nullable?
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'created_at'
     },
+    // TODO: Doesn't the 'updatedAt' need to be non-nullable?
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: true,
