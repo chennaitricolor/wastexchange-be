@@ -58,6 +58,9 @@ module.exports = Otp;
 *     post:
 *       description: send otp
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - name: users
 *           description: users object
 *           in:  body

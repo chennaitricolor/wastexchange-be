@@ -157,6 +157,10 @@ module.exports = Bids;
 *   /bids:
 *     get:
 *       description: get all bids
+*       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *       responses:
 *         200:
 *           description: bids details.
@@ -170,6 +174,9 @@ module.exports = Bids;
 *     get:
 *       description: get all items belonging to an bidId
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: bidId
 *           required: true
@@ -188,6 +195,9 @@ module.exports = Bids;
 *     get:
 *       description: get all bids
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: buyerId
 *           required: true
@@ -260,6 +270,9 @@ module.exports = Bids;
 *     post:
 *       description: create bids
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: buyerId
 *           required: true
@@ -287,6 +300,9 @@ module.exports = Bids;
 *     put:
 *       description: modify bids
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: bidId
 *           required: true
@@ -315,6 +331,9 @@ module.exports = Bids;
 *     delete:
 *       description: get all bids belonging to an bidId
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: bidId
 *           required: true

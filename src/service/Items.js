@@ -126,6 +126,10 @@ module.exports = Items;
 *   /items:
 *     get:
 *       description: get all items
+*       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *       responses:
 *         200:
 *           description: item details.
@@ -139,6 +143,9 @@ module.exports = Items;
 *     get:
 *       description: get all items belonging to an itemid
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: itemId
 *           required: true
@@ -157,6 +164,9 @@ module.exports = Items;
 *     get:
 *       description: get all seller  items
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: sellerId
 *           required: true
@@ -195,6 +205,9 @@ module.exports = Items;
 *     post:
 *       description: create items seller has put up for sale
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: sellerId
 *           required: true
@@ -222,6 +235,9 @@ module.exports = Items;
 *     put:
 *       description: modify items seller has put up for sale
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: itemId
 *           required: true
@@ -250,6 +266,9 @@ module.exports = Items;
 *     delete:
 *       description: delete all items belonging to an itemid
 *       parameters:
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - in: path
 *           name: itemId
 *           required: true

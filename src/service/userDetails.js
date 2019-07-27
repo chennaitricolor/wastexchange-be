@@ -73,7 +73,7 @@ class UserDetails {
 
   static list(req, res) {
     return userDetails
-      .findAll()
+      .findAll({ attributes: { exclude: ['password', 'id', 'address','city', 'pinCode', 'persona', 'emailId', 'mobNo', 'altMobNo', 'createdAt','updatedAt','loginId'] } })
       .then(users => res.status(200).send(users));
   }
 
@@ -232,6 +232,9 @@ module.exports = UserDetails;
 *           required: true
 *           schema:
 *              type: integer
+*         - in: header
+*           name: x-access-token
+*           required: true
 *       responses:
 *         200:
 *           description: user details.
@@ -401,6 +404,9 @@ module.exports = UserDetails;
 *           required: true
 *           schema:
 *              type: integer
+*         - in: header
+*           name: x-access-token
+*           required: true
 *         - name: userdetails
 *           description: userdetails object
 *           in:  body
@@ -429,6 +435,9 @@ module.exports = UserDetails;
 *           required: true
 *           schema:
 *              type: integer
+*         - in: header
+*           name: x-access-token
+*           required: true
 *       responses:
 *         200:
 *           description: userdetails successfully deleted.
