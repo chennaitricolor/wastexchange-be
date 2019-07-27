@@ -73,7 +73,7 @@ class UserDetails {
 
   static list(req, res) {
     return userDetails
-      .findAll({ attributes: { exclude: ['password', 'id', 'address','city', 'pinCode', 'persona', 'emailId', 'mobNo', 'altMobNo', 'createdAt','updatedAt','loginId'] } })
+      .findAll({ attributes: { exclude: ['password', 'id', 'address','city', 'pinCode', 'emailId', 'mobNo', 'altMobNo', 'createdAt','updatedAt','loginId'] } })
       .then(users => res.status(200).send(users));
   }
 
