@@ -9,20 +9,8 @@ class UserDetails {
     try {
       // TODO: Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-      const {
-        city,
-        pinCode,
-        address,
-        mobNo,
-        altMobNo,
-        lat,
-        persona,
-        emailId,
-        name,
-        otp,
-        long,
-      } = req.body;
-      userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then((user) => {
+      const { city, pinCode, address, mobNo, altMobNo, lat, persona, emailId, name, otp, long } = req.body;
+      userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then(user => {
         if (otp == user.otp) {
           return userDetails
             .create({
@@ -39,27 +27,28 @@ class UserDetails {
               lat,
               long,
               createdAt: new Date(),
-              updatedAt: new Date(),
+              updatedAt: new Date()
             })
-            .then((userData) => {
+            .then(userData => {
               // TODO: This seems like a hack?
               // an empty insert to items table to handle maps rendering
               items.create({
                 sellerId: userData.id,
                 details: {},
                 createdAt: new Date(),
-                updatedAt: new Date(),
+                updatedAt: new Date()
               });
               const token = jwt.sign({ id: userData.id }, 'secret cant tell', {
-                expiresIn: 86400, // expires in 24 hours
+                expiresIn: 86400 // expires in 24 hours
               });
               res.status(201).send({
                 success: true,
                 message: 'User successfully created',
                 auth: true,
-                token,
+                token
               });
-            }).catch((e) => {
+            })
+            .catch(e => {
               res.status(500).send({ error: e.message });
             });
         }
@@ -73,16 +62,18 @@ class UserDetails {
 
   static list(req, res) {
     return userDetails
-      .findAll({ attributes: { exclude: ['password', 'id', 'address','city', 'pinCode', 'emailId', 'mobNo', 'altMobNo', 'createdAt','updatedAt','loginId'] } })
+      .findAll({
+        attributes: {
+          exclude: ['password', 'id', 'address', 'city', 'pinCode', 'emailId', 'mobNo', 'altMobNo', 'createdAt', 'updatedAt', 'loginId']
+        }
+      })
       .then(users => res.status(200).send(users));
   }
 
   static getUserDetailById(req, res) {
     try {
       // TODO: How are we handling 'not found' record?
-      return userDetails
-        .findByPk(req.params.id)
-        .then(users => res.status(200).send(users));
+      return userDetails.findByPk(req.params.id).then(users => res.status(200).send(users));
     } catch (e) {
       res.status(500).send({ error: e.message });
     }
@@ -92,35 +83,26 @@ class UserDetails {
     try {
       // TODO: Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-      const {
-        city,
-        pinCode,
-        address,
-        emailId,
-        name,
-        mobNo,
-        altMobNo,
-        lat,
-        long,
-      } = req.body;
+      const { city, pinCode, address, emailId, name, mobNo, altMobNo, lat, long } = req.body;
       return userDetails
         .findByPk(req.params.id)
-        .then((details) => {
-          details.update({
-            city: city || details.city,
-            pinCode: pinCode || details.pinCode,
-            address: address || details.address,
-            emailId: emailId || details.emailId,
-            loginId: emailId || details.loginId,
-            password: hashedPassword || details.password,
-            name: name || details.name,
-            mobNo: mobNo || details.mobNo,
-            altMobNo: altMobNo || details.altMobNo,
-            lat: lat || details.lat,
-            long: long || details.long,
-            updatedAt: new Date(),
-          })
-            .then((updateduserDetails) => {
+        .then(details => {
+          details
+            .update({
+              city: city || details.city,
+              pinCode: pinCode || details.pinCode,
+              address: address || details.address,
+              emailId: emailId || details.emailId,
+              loginId: emailId || details.loginId,
+              password: hashedPassword || details.password,
+              name: name || details.name,
+              mobNo: mobNo || details.mobNo,
+              altMobNo: altMobNo || details.altMobNo,
+              lat: lat || details.lat,
+              long: long || details.long,
+              updatedAt: new Date()
+            })
+            .then(updateduserDetails => {
               res.status(200).send({
                 message: 'userDetails updated successfully',
                 data: {
@@ -134,8 +116,8 @@ class UserDetails {
                   loginId: emailId || details.loginId,
                   name: name || details.name,
                   lat: lat || updateduserDetails.lat,
-                  long: long || updateduserDetails.long,
-                },
+                  long: long || updateduserDetails.long
+                }
               });
             })
             .catch(error => res.status(400).send(error));
@@ -150,17 +132,19 @@ class UserDetails {
     try {
       return userDetails
         .findByPk(req.params.id)
-        .then((details) => {
+        .then(details => {
           if (!details) {
             return res.status(404).send({
-              message: 'userDetails Not Found',
+              message: 'userDetails Not Found'
             });
           }
           return details
             .destroy()
-            .then(() => res.status(200).send({
-              message: 'userDetails successfully deleted',
-            }))
+            .then(() =>
+              res.status(200).send({
+                message: 'userDetails successfully deleted'
+              })
+            )
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error));
@@ -171,7 +155,7 @@ class UserDetails {
 
   static login(req, res) {
     try {
-      userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
+      userDetails.findOne({ where: { loginId: req.body.loginId } }).then(user => {
         if (!user) return res.status(404).send('No user found.');
 
         // check if the password is valid
@@ -181,7 +165,7 @@ class UserDetails {
         // if user is found and password is valid
         // create a token
         const token = jwt.sign({ id: user.id }, 'secret cant tell', {
-          expiresIn: 86400, // expires in 24 hours
+          expiresIn: 86400 // expires in 24 hours
         });
 
         // return the information including token as JSON
@@ -194,7 +178,7 @@ class UserDetails {
 
   static getUserIdByToken(req, res) {
     try {
-      userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then((user) => {
+      userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then(user => {
         if (!user) return res.status(404).send('No user found.');
         res.status(200).send(user);
       });
@@ -206,39 +190,38 @@ class UserDetails {
 
 module.exports = UserDetails;
 
+// Swagger Definitions
+/**
+ * @swagger
+ * path:
+ *   /users:
+ *     get:
+ *       description: get all userdetails
+ *       responses:
+ *         200:
+ *           description: user details.
+ */
 
 // Swagger Definitions
 /**
-* @swagger
-* path:
-*   /users:
-*     get:
-*       description: get all userdetails
-*       responses:
-*         200:
-*           description: user details.
-*/
-
-// Swagger Definitions
-/**
-* @swagger
-* path:
-*   /users/{id}:
-*     get:
-*       description: get user details belonging to an id
-*       parameters:
-*         - in: path
-*           name: id
-*           required: true
-*           schema:
-*              type: integer
-*         - in: header
-*           name: x-access-token
-*           required: true
-*       responses:
-*         200:
-*           description: user details.
-*/
+ * @swagger
+ * path:
+ *   /users/{id}:
+ *     get:
+ *       description: get user details belonging to an id
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *              type: integer
+ *         - in: header
+ *           name: x-access-token
+ *           required: true
+ *       responses:
+ *         200:
+ *           description: user details.
+ */
 
 /**
  * @swagger
@@ -352,93 +335,89 @@ module.exports = UserDetails;
 */
 //
 
-
 /**
-* @swagger
-* path:
-*   /users/login:
-*     post:
-*       description: login
-*       produces:
-*        - application/json
-*       parameters:
-*        - name: user
-*          description: User object
-*          in:  body
-*          required: true
-*          type: string
-*          schema:
-*           $ref: '#/definitions/loginSchema'
-*       responses:
-*         200:
-*           description: user logged in  successfully
+ * @swagger
+ * path:
+ *   /users/login:
+ *     post:
+ *       description: login
+ *       produces:
+ *        - application/json
+ *       parameters:
+ *        - name: user
+ *          description: User object
+ *          in:  body
+ *          required: true
+ *          type: string
+ *          schema:
+ *           $ref: '#/definitions/loginSchema'
+ *       responses:
+ *         200:
+ *           description: user logged in  successfully
  */
-
 
 // Swagger Definitions
 /**
-* @swagger
-* path:
-*   /users/me:
-*     get:
-*       description: get user meta with jwt
-*       parameters:
-*          - in: header
-*            name: x-access-token
-*            required: true
-*       responses:
-*         200:
-*           description: user details.
-*/
-
-
-/**
-* @swagger
-* path:
-*   /users/{id}:
-*     put:
-*       description: modify userdetails
-*       parameters:
-*         - in: path
-*           name: id
-*           required: true
-*           schema:
-*              type: integer
-*         - in: header
-*           name: x-access-token
-*           required: true
-*         - name: userdetails
-*           description: userdetails object
-*           in:  body
-*           required: true
-*           type: string
-*           schema:
-*            $ref: '#/definitions/modifyUserDetails'
-*       produces:
-*        - application/json
-*       responses:
-*         200:
-*           description: userdetails updated successfully
+ * @swagger
+ * path:
+ *   /users/me:
+ *     get:
+ *       description: get user meta with jwt
+ *       parameters:
+ *          - in: header
+ *            name: x-access-token
+ *            required: true
+ *       responses:
+ *         200:
+ *           description: user details.
  */
 
+/**
+ * @swagger
+ * path:
+ *   /users/{id}:
+ *     put:
+ *       description: modify userdetails
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *              type: integer
+ *         - in: header
+ *           name: x-access-token
+ *           required: true
+ *         - name: userdetails
+ *           description: userdetails object
+ *           in:  body
+ *           required: true
+ *           type: string
+ *           schema:
+ *            $ref: '#/definitions/modifyUserDetails'
+ *       produces:
+ *        - application/json
+ *       responses:
+ *         200:
+ *           description: userdetails updated successfully
+ */
 
 // Swagger Definitions
 /**
-* @swagger
-* path:
-*   /users/{id}:
-*     delete:
-*       description: delete all userdetails belonging to an id
-*       parameters:
-*         - in: path
-*           name: id
-*           required: true
-*           schema:
-*              type: integer
-*         - in: header
-*           name: x-access-token
-*           required: true
-*       responses:
-*         200:
-*           description: userdetails successfully deleted.
-*/
+ * @swagger
+ * path:
+ *   /users/{id}:
+ *     delete:
+ *       description: delete all userdetails belonging to an id
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *              type: integer
+ *         - in: header
+ *           name: x-access-token
+ *           required: true
+ *       responses:
+ *         200:
+ *           description: userdetails successfully deleted.
+ */

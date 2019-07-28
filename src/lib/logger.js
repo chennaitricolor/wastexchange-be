@@ -3,9 +3,7 @@ const WinstonContext = require('winston-context');
 // const CustomTransport = require('../lib/customTransport');
 const config = require('../config');
 
-const consoleFormat = winston.format.printf(info => (
-  JSON.stringify(info, null, '\n')
-));
+const consoleFormat = winston.format.printf(info => JSON.stringify(info, null, '\n'));
 
 const isProductionEnvironment = () => process.env.NODE_CONFIG_ENV === 'prod';
 
@@ -18,27 +16,17 @@ function createLogger(env) {
   if (env && !['local'].includes(env)) {
     logger = winston.createLogger({
       level: logLevel,
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.label({ label: config.logPrefix }),
-        winston.format.json(),
-      ),
+      format: winston.format.combine(winston.format.timestamp(), winston.format.label({ label: config.logPrefix }), winston.format.json()),
       transports: [
-        new winston.transports.Console({ silent: isTestEnvironment }),
+        new winston.transports.Console({ silent: isTestEnvironment })
         //    new CustomTransport(),
-      ],
+      ]
     });
   } else {
     logger = winston.createLogger({
       level: logLevel,
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.label({ label: config.logPrefix }),
-        consoleFormat,
-      ),
-      transports: [
-        new winston.transports.Console({ silent: isTestEnvironment }),
-      ],
+      format: winston.format.combine(winston.format.timestamp(), winston.format.label({ label: config.logPrefix }), consoleFormat),
+      transports: [new winston.transports.Console({ silent: isTestEnvironment })]
     });
   }
   return logger;
@@ -47,7 +35,7 @@ function createLogger(env) {
 const logger = createLogger(process.env.NODE_ENV);
 
 const contextLogger = new WinstonContext(logger, '', {
-  requestId: (Math.random() * 1e20).toString(36),
+  requestId: (Math.random() * 1e20).toString(36)
 });
 
 module.exports = contextLogger;

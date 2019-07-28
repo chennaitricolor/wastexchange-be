@@ -1,9 +1,7 @@
 {
   "functions": {
-    "source":".",
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ],
-    "rewrites" : [{"source" : "**", "function" : "api"}]
+    "source": ".",
+    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"],
+    "rewrites": [{ "source": "**", "function": "api" }]
   }
 }
