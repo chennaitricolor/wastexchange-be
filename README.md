@@ -8,7 +8,7 @@ Waste management service Swagger file for the endpoint is also available and exp
     * run `local-startup.bat`
 2.	Software dependencies
     * GIT version ^2.15
-    * Node version ^8.9.0
+    * Node version 10.16.0 LTS
 3.	Latest releases
     * Version 0.1.0
 4.	API references
