@@ -14,5 +14,4 @@
 // }
 // module.exports = YourCustomTransport;
 
-
 // will be needed when integrating airbrake dont delete

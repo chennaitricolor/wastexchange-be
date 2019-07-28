@@ -5,5 +5,5 @@ const CustomTransport = require('./customTransport');
 module.exports = {
   api,
   CustomTransport,
-  logger,
+  logger
 };
