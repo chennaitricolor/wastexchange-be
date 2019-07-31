@@ -65,7 +65,7 @@ class UserDetails {
     return userDetails
       .findAll({
         attributes: {
-          exclude: ['password', 'id', 'address', 'city', 'pinCode', 'emailId', 'mobNo', 'altMobNo', 'createdAt', 'updatedAt', 'loginId']
+          exclude: ['password', 'createdAt', 'updatedAt', 'loginId']
         }
       })
       .then(users => res.status(200).send(users));
