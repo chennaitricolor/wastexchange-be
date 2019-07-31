@@ -69,6 +69,7 @@
     "moment-timezone": "^0.5.23",
     "morgan": "^1.9.1",
     "newrelic": "^4.7.0",
+    "object.pick": "^1.3.0",
     "pg": "^7.11.0",
     "ramda": "^0.26.1",
     "request": "^2.88.0",

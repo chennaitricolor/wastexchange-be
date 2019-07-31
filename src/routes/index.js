@@ -7,6 +7,7 @@ module.exports = (app) => {
   app.post('/users/register', UserDetails.create); // API route for user to signup
   app.post('/users/login', UserDetails.login);
   app.post('/users/sendOtp', Otp.create);
+  app.put('/users/:id/approve', verifyToken, UserDetails.approve);
   app.get('/users/me', verifyToken, UserDetails.getUserIdByToken);
   // TODO: Do we need a userId for this if we have the token already.
   app.put('/users/:id', verifyToken, UserDetails.modify); // API route for user to edit a detail
