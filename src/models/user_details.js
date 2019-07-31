@@ -74,6 +74,12 @@ module.exports = function (sequelize, DataTypes) {
         unique: true,
         field: 'loginId',
       },
+      approved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'approved',
+      },
       // TODO: Doesn't the 'createdAt' need to be non-nullable?
       createdAt: {
         type: DataTypes.DATE,

@@ -1,11 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const pick = require('object.pick');
 const models = require('../models');
+const notifier = require('../lib/notifier');
+const templates = require('../constants').notificationTemplates;
 
 const { items, userDetails, userOtp } = models;
 
 class UserDetails {
   static create(req, res) {
+    const self = this;
     try {
       // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
@@ -29,6 +33,7 @@ class UserDetails {
               persona,
               lat,
               long,
+              approved: false,
               createdAt: new Date(),
               updatedAt: new Date(),
             })
@@ -45,6 +50,9 @@ class UserDetails {
                 // TODO: Token expiry constant time be declared a constant as it's used in 2 places - create and login.
                 expiresIn: 86400, // expires in 24 hours
               });
+
+              notifyUser('buyer/seller-signup', userData);
+
               res.status(201).send({
                 success: true,
                 message: 'User successfully created',
@@ -65,8 +73,11 @@ class UserDetails {
   }
 
   static list(req, res) {
+    // TODO: Do we need pagination?
+    const whereClause = pick(req.query, ['persona', 'name', 'login', 'emailId', 'approved', 'city']);
     return userDetails
       .findAll({
+        where: whereClause,
         attributes: {
           exclude: ['password', 'createdAt', 'updatedAt', 'loginId'],
         },
@@ -159,11 +170,39 @@ class UserDetails {
     }
   }
 
+  static approve(req, res) {
+    try {
+      // TODO: How are we ensuring that the currently logged-in user is privileged to perform this action?
+      return userDetails
+        .findByPk(req.params.id)
+        .then((details) => {
+          details
+            .update({
+              approved: true,
+              updatedAt: new Date(),
+            })
+            .then((_updateduserDetails) => {
+              notifyUser('buyer/seller-approved', _updateduserDetails);
+              res.status(200).send({
+                message: 'user approved successfully',
+              });
+            })
+            .catch(error => res.status(400).send(error));
+        })
+        .catch(error => res.status(400).send(error));
+    } catch (e) {
+      res.status(500).send({ error: e.message });
+    }
+  }
+
   static login(req, res) {
     try {
       userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
         // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
         if (!user) return res.status(404).send('No user found.');
+
+        // check if the user has been approved
+        if (user.approved === false && (user.persona === 'buyer' || user.persona === 'seller')) return res.status(401).send('The user has not yet been approved by an admin');
 
         // check if the password is valid
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
@@ -177,7 +216,7 @@ class UserDetails {
         });
 
         // return the information including token as JSON
-        res.status(200).send({ auth: true, token });
+        res.status(200).send({ auth: true, token, approved: user.approved });
       });
     } catch (e) {
       res.status(500).send({ error: e.message });
@@ -196,6 +235,15 @@ class UserDetails {
       res.status(500).send({ error: e.message });
     }
   }
+}
+
+function notifyUser(templateId, user) {
+  // const emailMessage = templates[templateId].email.message.replace('{name}', user.name);
+  // const subject = templates[templateId].email.subject;
+  // notifier.sendEmail(emailMessage, subject, undefined, user.emailId);
+
+  const smsMessage = templates[templateId].sms.message.replace('{name}', user.name);
+  notifier.sendSMS(smsMessage, undefined, [user.mobNo, user.altMobNo], 91);
 }
 
 module.exports = UserDetails;
@@ -430,4 +478,25 @@ module.exports = UserDetails;
  *       responses:
  *         200:
  *           description: userdetails successfully deleted.
+ */
+
+// Swagger Definitions
+/**
+ * @swagger
+ * path:
+ *   /users/{id}/approve:
+ *     put:
+ *       description: approve userdetail belonging to an id
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *              type: integer
+ *         - in: header
+ *           name: x-access-token
+ *           required: true
+ *       responses:
+ *         200:
+ *           description: userdetails successfully approved.
  */

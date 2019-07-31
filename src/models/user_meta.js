@@ -74,9 +74,10 @@ module.exports = function (sequelize, DataTypes) {
   userMeta.associate = (models) => {
     // associations can be defined here
     // TODO: When a 'user' is deleted, how should this association be handled? nulled out / deleted / ?
-    userMeta.hasMany(models.userDetails, {
-      foreignKey: 'userId',
-    });
+    // findByPk results in user service will result in constraint error because of incorrect (userId) column mapping with userDetails.
+    // userMeta.hasMany(models.userDetails, {
+    //   foreignKey: 'userId',
+    // });
   };
   return userMeta;
 };
