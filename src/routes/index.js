@@ -22,7 +22,7 @@ module.exports = app => {
   //items
   app.post('/seller/:sellerId/items', verifyToken, Items.create);
   app.get('/items', verifyToken, Items.list);
-  app.get('/seller/:sellerId/items', verifyToken, Items.getItemBySellerId);
+  app.get('/seller/:sellerId/items', verifyToken, Items.getItemBySellerId); // TODO: [STYLE] Can this be changed to only a filter (query param) on the index call?
   app.get('/items/:itemId', verifyToken, Items.getItemById);
   app.put('/items/:itemId', verifyToken, Items.modify);
   app.delete('/items/:itemId', verifyToken, Items.delete);
@@ -30,7 +30,7 @@ module.exports = app => {
   //bids
   app.post('/buyer/:buyerId/bids', verifyToken, Bids.create);
   app.get('/bids', verifyToken, Bids.list);
-  app.get('/buyer/:buyerId/bids', verifyToken, Bids.getItemByBuyerId);
+  app.get('/buyer/:buyerId/bids', verifyToken, Bids.getItemByBuyerId); // TODO: [STYLE] Can this be changed to only a filter (query param) on the index call?
   app.get('/bids/:bidId', verifyToken, Bids.getBidById);
   app.put('/bids/:bidId', verifyToken, Bids.modify);
   app.delete('/bids/:bidId', verifyToken, Bids.delete);

@@ -7,9 +7,10 @@ const { items, userDetails, userOtp } = models;
 class UserDetails {
   static create(req, res) {
     try {
-      // TODO: Does this mean that the password is sent unencrypted from the frontend?
+      // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const { city, pinCode, address, mobNo, altMobNo, lat, persona, emailId, name, otp, long } = req.body;
+      // TODO: [PERF] Rather than retrieving from the db and then checking the otp, can we include that in the where clause?
       userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then(user => {
         if (otp == user.otp) {
           return userDetails
@@ -30,7 +31,7 @@ class UserDetails {
               updatedAt: new Date()
             })
             .then(userData => {
-              // TODO: This seems like a hack?
+              // TODO: [HACK] This seems like a hack?
               // an empty insert to items table to handle maps rendering
               items.create({
                 sellerId: userData.id,
@@ -72,7 +73,8 @@ class UserDetails {
 
   static getUserDetailById(req, res) {
     try {
-      // TODO: How are we handling 'not found' record?
+      // TODO: [AUTH] Are we exposing details of other users without checking current logged-in user's privilege?
+      // TODO: [BUG] How are we handling 'not found' record?
       return userDetails.findByPk(req.params.id).then(users => res.status(200).send(users));
     } catch (e) {
       res.status(500).send({ error: e.message });
@@ -81,7 +83,7 @@ class UserDetails {
 
   static modify(req, res) {
     try {
-      // TODO: Does this mean that the password is sent unencrypted from the frontend?
+      // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
       const { city, pinCode, address, emailId, name, mobNo, altMobNo, lat, long } = req.body;
       return userDetails
@@ -106,7 +108,7 @@ class UserDetails {
               res.status(200).send({
                 message: 'userDetails updated successfully',
                 data: {
-                  // TODO: Since the 'updateduserDetails' object has all the updated fields, can't we not do the '||' style here?
+                  // TODO: [STYLE] Since the 'updateduserDetails' object has all the updated fields, can't we not do the '||' style here?
                   city: city || updateduserDetails.city,
                   pinCode: pinCode || updateduserDetails.pinCode,
                   address: address || updateduserDetails.address,
@@ -130,6 +132,7 @@ class UserDetails {
 
   static delete(req, res) {
     try {
+      // TODO: How are we ensuring that the currently logged-in user is privileged to perform this action?
       return userDetails
         .findByPk(req.params.id)
         .then(details => {
@@ -156,12 +159,14 @@ class UserDetails {
   static login(req, res) {
     try {
       userDetails.findOne({ where: { loginId: req.body.loginId } }).then(user => {
+        // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
         if (!user) return res.status(404).send('No user found.');
 
         // check if the password is valid
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
 
+        // TODO: [STYLE] Move the salt to a common location so that it can be reused
         // if user is found and password is valid
         // create a token
         const token = jwt.sign({ id: user.id }, 'secret cant tell', {
@@ -179,6 +184,7 @@ class UserDetails {
   static getUserIdByToken(req, res) {
     try {
       userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then(user => {
+        // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
         if (!user) return res.status(404).send('No user found.');
         res.status(200).send(user);
       });

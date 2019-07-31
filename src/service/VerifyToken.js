@@ -6,6 +6,7 @@ function verifyToken(req, res, next) {
   if (!token) return res.status(403).send({ auth: false, message: 'No token provided.' });
 
   // verifies secret and checks exp
+  // TODO: [STYLE] Move the salt to a common location so that it can be reused
   jwt.verify(token, 'secret cant tell', (err, decoded) => {
     if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
 

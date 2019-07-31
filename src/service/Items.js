@@ -7,6 +7,7 @@ class Items {
     try {
       const { details } = req.body;
       const { sellerId } = req.params;
+      // TODO: How are we ensuring/restricting that the item is only created by the currently logged-in user who is a seller or an admin?
       return items
         .create({
           sellerId,
@@ -57,6 +58,7 @@ class Items {
   static modify(req, res) {
     try {
       const { sellerId, details } = req.body;
+      // TODO: How are we ensuring/restricting that the item is only modified by the seller or an admin?
       return items
         .findByPk(req.params.itemId)
         .then(item => {
@@ -90,6 +92,7 @@ class Items {
 
   static delete(req, res) {
     try {
+      // TODO: How are we ensuring/restricting that the item is only deleted by the seller or an admin?
       return items
         .findByPk(req.params.itemId)
         .then(item => {

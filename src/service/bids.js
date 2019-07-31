@@ -8,6 +8,7 @@ class Bids {
     try {
       const { sellerId, pDateTime, contactName, details, totalBid, status } = req.body;
       const { buyerId } = req.params;
+      // TODO: How are we ensuring/restricting that the bid is only created by the currently logged-in user who is a buyer or an admin?
       return bids
         .create({
           buyerId,
@@ -44,6 +45,7 @@ class Bids {
 
   static getItemByBuyerId(req, res) {
     try {
+      // TODO: Once logged in, a buyer can see a different buyers data by guessing the id
       return bids.findAll({ where: { buyerId: req.params.buyerId } }).then(bids => res.status(200).send(bids));
     } catch (e) {
       res.status(500).send({ error: e.message });
@@ -52,6 +54,7 @@ class Bids {
 
   static getBidById(req, res) {
     try {
+      // TODO: Once logged in, a buyer can see a different buyers data by guessing the id
       return bids.findByPk(req.params.bidId).then(bids => res.status(200).send(bids));
     } catch (e) {
       res.status(500).send({ error: e.message });
@@ -61,6 +64,7 @@ class Bids {
   static modify(req, res) {
     try {
       const { buyerId, sellerId, pDateTime, contactName, details, totalBid, status } = req.body;
+      // TODO: How are we ensuring/restricting that the bid is only modified by the buyer who bidded or an admin?
       return bids
         .findByPk(req.params.bidId)
         .then(item => {
@@ -106,6 +110,7 @@ class Bids {
 
   static delete(req, res) {
     try {
+      // TODO: How are we ensuring/restricting that the bid is only deleted by the buyer who bidded or an admin?
       return bids
         .findByPk(req.params.bidId)
         .then(bid => {
