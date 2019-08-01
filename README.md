@@ -12,7 +12,7 @@ Waste management service Swagger file for the endpoint is also available and exp
 3.	Latest releases
     * Version 0.1.0
 4.	API references
-    * Swagger endpoint: `http://localhost:7700/swagger`
+    * Swagger endpoint: `http://localhost:7000/api-docs/`
 5.  Folder Structure
 
         |_src
