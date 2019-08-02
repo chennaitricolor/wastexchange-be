@@ -10,8 +10,8 @@ Swagger file is also available for the endpoints.
 
 ### 1. Software Dependencies
 
-* GIT version ^2.15
-* Node version 10.16.0 LTS
+* GIT version ^2.15 - [Download and Install from git-scm.com](https://git-scm.com/downloads)
+* Node version 10.16.0 LTS - [ Download and Install from nodejs.org](https://nodejs.org/en/#download)
 
 ### 2. Installation Process
 
