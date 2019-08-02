@@ -1,27 +1,45 @@
- # Introduction
-Waste management service Swagger file for the endpoint is also available and exposed via api.
+# Waste Exchange Service
 
-# Getting Started
-1.	Installation process
-    * Clone the repository
-    * run the command `npm install`
-    * run `local-startup.bat`
-2.	Software dependencies
-    * GIT version ^2.15
-    * Node version 10.16.0 LTS
-3.	Latest releases
-    * Version 0.1.0
-4.	API references
-    * Swagger endpoint: `http://localhost:7000/api-docs/`
-5.  Folder Structure
+## Introduction
 
-        |_src
-            |_config    `environment config`
-            |_constants `constants files`
-            |_models    `business models`
-            |_routes    `express routes`
-            |_service   `Buisness logic`
+This repository is backend service for [indiawasteexchange.com](https://indiawasteexchange.com) and it is built in **Node.js** and uses **PostgreSQL** as database.
 
-# Build and Test
-`local-startup.bat` (set accordingly in mac or linux this file is for windows)
-to run in watch mode: `npm run watch`
+Swagger file is also available for the endpoints.
+
+## Getting Started
+
+### 1. Software Dependencies
+
+* GIT version ^2.15
+* Node version 10.16.0 LTS
+
+### 2. Installation Process
+
+* Clone the repository
+* run the command `npm install`
+
+### 3. Build and Run
+
+* Windows : run `local-startup.bat`
+* Linux and Mac : run `local-startup.sh`
+
+### 4. Latest Releases
+
+* Version 0.1.0
+
+### 5. API References
+
+* Swagger endpoint: [http://localhost:7000/api-docs/](http://localhost:7000/api-docs/)
+
+### 6. Folder Structure
+
+    |_src
+        |_config    `Environment config`
+        |_constants `Constants files`
+        |_models    `Business models`
+        |_routes    `Express routes`
+        |_service   `Business logic`
+
+## Watch Mode ( Nodemon )
+
+To run in watch mode: `npm run watch`
