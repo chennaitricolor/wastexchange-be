@@ -6,8 +6,11 @@ module.exports = app => {
   app.post('/users/login', UserDetails.login);
   app.post('/users/sendOtp', Otp.create);
   app.get('/users/me', verifyToken, UserDetails.getUserIdByToken);
+  //TODO: Do we need a userId for this if we have the token already.
   app.put('/users/:id', verifyToken, UserDetails.modify); // API route for user to edit a detail
+  //TODO: Do we need a userId for this if we have the token already.
   app.delete('/users/:id', verifyToken, UserDetails.delete);
+  //TODO: Do we need a userId for this if we have the token already.
   app.get('/users/:id', verifyToken, UserDetails.getUserDetailById);
   app.get('/users', UserDetails.list);
 
