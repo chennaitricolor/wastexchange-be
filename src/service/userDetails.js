@@ -40,6 +40,7 @@ class UserDetails {
                 updatedAt: new Date()
               });
               const token = jwt.sign({ id: userData.id }, 'secret cant tell', {
+                //TODO: Token expiry constant time be declared a constant as it's used in 2 places - create and login.
                 expiresIn: 86400 // expires in 24 hours
               });
               res.status(201).send({
@@ -181,6 +182,7 @@ class UserDetails {
     }
   }
 
+  //TODO: Should this method be called getUserByToken since we are returning a user
   static getUserIdByToken(req, res) {
     try {
       userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then(user => {
