@@ -10,7 +10,7 @@ const db = {};
 const sequelize = new Sequelize(config.db.name, config.db.user, config.db.pwd, {
   dialect: 'postgres',
   host: config.db.host,
-  port: config.db.port
+  port: config.db.port,
 });
 // sequelize.sync();
 const basename = path.basename(module.filename);
@@ -20,7 +20,7 @@ const modelsDir = path.normalize(`${__dirname}/../models`);
 fs.readdirSync(modelsDir)
   .filter(file => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
   // import model files and save model names
-  .forEach(file => {
+  .forEach((file) => {
     const model = sequelize.import(path.join(modelsDir, file));
     db[model.name] = model;
   });
@@ -29,7 +29,7 @@ fs.readdirSync(modelsDir)
 module.exports = _.extend(
   {
     sequelize,
-    Sequelize
+    Sequelize,
   },
-  db
+  db,
 );

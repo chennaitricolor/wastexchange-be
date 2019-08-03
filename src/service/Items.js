@@ -13,15 +13,13 @@ class Items {
           sellerId,
           details,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         })
-        .then(items =>
-          res.status(201).send({
-            message: 'Your items details are created ',
-            items
-          })
-        )
-        .catch(e => {
+        .then(items => res.status(201).send({
+          message: 'Your items details are created ',
+          items,
+        }))
+        .catch((e) => {
           res.status(500).send({ error: e.message });
         });
     } catch (e) {
@@ -61,24 +59,24 @@ class Items {
       // TODO: How are we ensuring/restricting that the item is only modified by the seller or an admin?
       return items
         .findByPk(req.params.itemId)
-        .then(item => {
+        .then((item) => {
           item
             .update({
               sellerId: sellerId || items.sellerId,
               details: details || items.details,
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
-            .then(updateditems => {
+            .then((updateditems) => {
               res
                 .status(200)
                 .send({
                   message: 'items updated successfully',
                   data: {
                     sellerId: updateditems.sellerId,
-                    details: updateditems.details
-                  }
+                    details: updateditems.details,
+                  },
                 })
-                .catch(e => {
+                .catch((e) => {
                   res.status(500).send({ error: e.message });
                 });
             })
@@ -95,19 +93,17 @@ class Items {
       // TODO: How are we ensuring/restricting that the item is only deleted by the seller or an admin?
       return items
         .findByPk(req.params.itemId)
-        .then(item => {
+        .then((item) => {
           if (!item) {
             return res.status(400).send({
-              message: 'items Not Found'
+              message: 'items Not Found',
             });
           }
           return item
             .destroy()
-            .then(() =>
-              res.status(200).send({
-                message: 'items successfully deleted'
-              })
-            )
+            .then(() => res.status(200).send({
+              message: 'items successfully deleted',
+            }))
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(404).send(error));

@@ -9,15 +9,15 @@ function callGet(endpoint, params = {}) {
   const headers = {
     'Cache-Control': 'private, no-cache, no-store, must-revalidate',
     Expires: '-1',
-    Pragma: 'no-cache'
+    Pragma: 'no-cache',
   };
 
   if (!R.isEmpty(params)) {
     Object.assign(headers, params);
   }
   const responsePromise = fetch(endpoint, {
-    headers
-  }).then(response => {
+    headers,
+  }).then((response) => {
     if (R.prop('ok', response)) {
       return response;
     }
@@ -25,7 +25,7 @@ function callGet(endpoint, params = {}) {
       type: API_CALL,
       statusCode: response.status,
       requestUrl: endpoint,
-      requestMethod: 'GET'
+      requestMethod: 'GET',
     });
     contextLogger.error(FAILURE_MESSAGE);
     throw new RangeError(FAILURE_MESSAGE);
@@ -35,7 +35,7 @@ function callGet(endpoint, params = {}) {
 
 function callPost(endpoint, body = {}, params = {}) {
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
   if (!R.isEmpty(params)) {
     Object.assign(headers, params);
@@ -44,8 +44,8 @@ function callPost(endpoint, body = {}, params = {}) {
   const responsePromise = fetch(endpoint, {
     method: 'POST',
     headers,
-    body: stringifiedBody
-  }).then(response => {
+    body: stringifiedBody,
+  }).then((response) => {
     if (R.prop('ok', response)) {
       return response.json();
     }
@@ -54,7 +54,7 @@ function callPost(endpoint, body = {}, params = {}) {
       statusCode: response.status,
       requestUrl: endpoint,
       requestBody: stringifiedBody,
-      requestMethod: 'POST'
+      requestMethod: 'POST',
     });
     contextLogger.error(FAILURE_MESSAGE);
     throw new RangeError(FAILURE_MESSAGE);

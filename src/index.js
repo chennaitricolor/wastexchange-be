@@ -22,15 +22,15 @@ const port = process.env.PORT || 7000;
 
 app.use(
   bodyParser.json({
-    limit: '50mb'
-  })
+    limit: '50mb',
+  }),
 );
 
 app.use(
   bodyParser.urlencoded({
     limit: '50mb',
-    extended: true
-  })
+    extended: true,
+  }),
 );
 app.use(cookieParser());
 app.use(cors());
@@ -40,13 +40,13 @@ const swaggerDefinition = {
   info: {
     title: 'Waste Management Service',
     version: '1.0.0-PreRelease',
-    description: 'Waste Management Service'
-  }
+    description: 'Waste Management Service',
+  },
 };
 
 const options = {
   swaggerDefinition,
-  apis: [path.join(__dirname, '/service/*.js')]
+  apis: [path.join(__dirname, '/service/*.js')],
 };
 
 app.get('/swagger.json', (req, res) => {
@@ -85,7 +85,7 @@ if (process.env.NODE_ENV !== 'dev') {
   const credentials = {
     key: privateKey,
     cert: certificate,
-    ca
+    ca,
   };
 
   const httpsServer = https.createServer(credentials, app);
@@ -113,7 +113,7 @@ if (process.env.NODE_ENV !== 'test') {
  * @see https://nodejs.org/api/process.html#process_event_uncaughtexception
  * @see https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
  */
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   logger.error(`uncaughtException :: ${err.stack}`);
 });
 
@@ -124,7 +124,7 @@ process.on('uncaughtException', err => {
  * make the migration to later versions of Node.js 'painful'.
  * @see https://nodejs.org/api/process.html#process_event_unhandledrejection
  */
-process.on('unhandledRejection', reason => {
+process.on('unhandledRejection', (reason) => {
   logger.error(`unhandledRejection :: ${reason.stack || reason}`);
 });
 
