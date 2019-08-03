@@ -6,7 +6,9 @@ const R = require('ramda');
 class Bids {
   static create(req, res) {
     try {
-      const { sellerId, pDateTime, contactName, details, totalBid, status } = req.body;
+      const {
+        sellerId, pDateTime, contactName, details, totalBid, status,
+      } = req.body;
       const { buyerId } = req.params;
       // TODO: How are we ensuring/restricting that the bid is only created by the currently logged-in user who is a buyer or an admin?
       return bids
@@ -19,15 +21,13 @@ class Bids {
           totalBid,
           status,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         })
-        .then(bids =>
-          res.status(201).send({
-            message: 'Your bids details are created ',
-            bids
-          })
-        )
-        .catch(e => {
+        .then(bids => res.status(201).send({
+          message: 'Your bids details are created ',
+          bids,
+        }))
+        .catch((e) => {
           res.status(500).send({ error: e.message });
         });
     } catch (e) {
@@ -63,11 +63,13 @@ class Bids {
 
   static modify(req, res) {
     try {
-      const { buyerId, sellerId, pDateTime, contactName, details, totalBid, status } = req.body;
+      const {
+        buyerId, sellerId, pDateTime, contactName, details, totalBid, status,
+      } = req.body;
       // TODO: How are we ensuring/restricting that the bid is only modified by the buyer who bidded or an admin?
       return bids
         .findByPk(req.params.bidId)
-        .then(item => {
+        .then((item) => {
           item
             .update({
               sellerId: sellerId || bids.sellerId,
@@ -77,18 +79,18 @@ class Bids {
               pDateTime: pDateTime || bids.pDateTime,
               totalBid: totalBid || bids.totalBid,
               status: status || bids.status,
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
-            .then(updatedbids => {
+            .then((updatedbids) => {
               if (status && status.toLowerCase() === 'approved') {
-                items.findOne({ where: { sellerId: updatedbids.sellerId } }).then(item => {
+                items.findOne({ where: { sellerId: updatedbids.sellerId } }).then((item) => {
                   const itemDetails = item.details;
                   for (const key of Object.keys(details)) {
                     itemDetails[key].quantity = itemDetails[key].quantity - details[key].bidQuantity;
                   }
                   item.update({
                     details: itemDetails,
-                    updatedAt: new Date()
+                    updatedAt: new Date(),
                   });
                 });
               }
@@ -96,8 +98,8 @@ class Bids {
                 message: 'bids updated successfully',
                 data: {
                   sellerId: updatedbids.sellerId,
-                  details: updatedbids.details
-                }
+                  details: updatedbids.details,
+                },
               });
             })
             .catch(error => res.status(400).send(error));
@@ -113,19 +115,17 @@ class Bids {
       // TODO: How are we ensuring/restricting that the bid is only deleted by the buyer who bidded or an admin?
       return bids
         .findByPk(req.params.bidId)
-        .then(bid => {
+        .then((bid) => {
           if (!bid) {
             return res.status(404).send({
-              message: 'bids Not Found'
+              message: 'bids Not Found',
             });
           }
           return bid
             .destroy()
-            .then(() =>
-              res.status(200).send({
-                message: 'bids successfully deleted'
-              })
-            )
+            .then(() => res.status(200).send({
+              message: 'bids successfully deleted',
+            }))
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error));

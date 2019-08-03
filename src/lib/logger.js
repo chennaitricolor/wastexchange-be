@@ -18,15 +18,15 @@ function createLogger(env) {
       level: logLevel,
       format: winston.format.combine(winston.format.timestamp(), winston.format.label({ label: config.logPrefix }), winston.format.json()),
       transports: [
-        new winston.transports.Console({ silent: isTestEnvironment })
+        new winston.transports.Console({ silent: isTestEnvironment }),
         //    new CustomTransport(),
-      ]
+      ],
     });
   } else {
     logger = winston.createLogger({
       level: logLevel,
       format: winston.format.combine(winston.format.timestamp(), winston.format.label({ label: config.logPrefix }), consoleFormat),
-      transports: [new winston.transports.Console({ silent: isTestEnvironment })]
+      transports: [new winston.transports.Console({ silent: isTestEnvironment })],
     });
   }
   return logger;
@@ -35,7 +35,7 @@ function createLogger(env) {
 const logger = createLogger(process.env.NODE_ENV);
 
 const contextLogger = new WinstonContext(logger, '', {
-  requestId: (Math.random() * 1e20).toString(36)
+  requestId: (Math.random() * 1e20).toString(36),
 });
 
 module.exports = contextLogger;

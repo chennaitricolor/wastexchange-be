@@ -9,9 +9,11 @@ class UserDetails {
     try {
       // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-      const { city, pinCode, address, mobNo, altMobNo, lat, persona, emailId, name, otp, long } = req.body;
+      const {
+        city, pinCode, address, mobNo, altMobNo, lat, persona, emailId, name, otp, long,
+      } = req.body;
       // TODO: [PERF] Rather than retrieving from the db and then checking the otp, can we include that in the where clause?
-      userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then(user => {
+      userOtp.findOne({ where: { emailId }, order: [['updatedAt', 'DESC']] }).then((user) => {
         if (otp == user.otp) {
           return userDetails
             .create({
@@ -28,29 +30,29 @@ class UserDetails {
               lat,
               long,
               createdAt: new Date(),
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
-            .then(userData => {
+            .then((userData) => {
               // TODO: [HACK] This seems like a hack?
               // an empty insert to items table to handle maps rendering
               items.create({
                 sellerId: userData.id,
                 details: {},
                 createdAt: new Date(),
-                updatedAt: new Date()
+                updatedAt: new Date(),
               });
               const token = jwt.sign({ id: userData.id }, 'secret cant tell', {
-                //TODO: Token expiry constant time be declared a constant as it's used in 2 places - create and login.
-                expiresIn: 86400 // expires in 24 hours
+                // TODO: Token expiry constant time be declared a constant as it's used in 2 places - create and login.
+                expiresIn: 86400, // expires in 24 hours
               });
               res.status(201).send({
                 success: true,
                 message: 'User successfully created',
                 auth: true,
-                token
+                token,
               });
             })
-            .catch(e => {
+            .catch((e) => {
               res.status(500).send({ error: e.message });
             });
         }
@@ -66,8 +68,8 @@ class UserDetails {
     return userDetails
       .findAll({
         attributes: {
-          exclude: ['password', 'createdAt', 'updatedAt', 'loginId']
-        }
+          exclude: ['password', 'createdAt', 'updatedAt', 'loginId'],
+        },
       })
       .then(users => res.status(200).send(users));
   }
@@ -86,10 +88,12 @@ class UserDetails {
     try {
       // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
       const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-      const { city, pinCode, address, emailId, name, mobNo, altMobNo, lat, long } = req.body;
+      const {
+        city, pinCode, address, emailId, name, mobNo, altMobNo, lat, long,
+      } = req.body;
       return userDetails
         .findByPk(req.params.id)
-        .then(details => {
+        .then((details) => {
           details
             .update({
               city: city || details.city,
@@ -103,9 +107,9 @@ class UserDetails {
               altMobNo: altMobNo || details.altMobNo,
               lat: lat || details.lat,
               long: long || details.long,
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
-            .then(updateduserDetails => {
+            .then((updateduserDetails) => {
               res.status(200).send({
                 message: 'userDetails updated successfully',
                 data: {
@@ -119,8 +123,8 @@ class UserDetails {
                   loginId: emailId || details.loginId,
                   name: name || details.name,
                   lat: lat || updateduserDetails.lat,
-                  long: long || updateduserDetails.long
-                }
+                  long: long || updateduserDetails.long,
+                },
               });
             })
             .catch(error => res.status(400).send(error));
@@ -136,19 +140,17 @@ class UserDetails {
       // TODO: How are we ensuring that the currently logged-in user is privileged to perform this action?
       return userDetails
         .findByPk(req.params.id)
-        .then(details => {
+        .then((details) => {
           if (!details) {
             return res.status(404).send({
-              message: 'userDetails Not Found'
+              message: 'userDetails Not Found',
             });
           }
           return details
             .destroy()
-            .then(() =>
-              res.status(200).send({
-                message: 'userDetails successfully deleted'
-              })
-            )
+            .then(() => res.status(200).send({
+              message: 'userDetails successfully deleted',
+            }))
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error));
@@ -159,7 +161,7 @@ class UserDetails {
 
   static login(req, res) {
     try {
-      userDetails.findOne({ where: { loginId: req.body.loginId } }).then(user => {
+      userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
         // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
         if (!user) return res.status(404).send('No user found.');
 
@@ -171,7 +173,7 @@ class UserDetails {
         // if user is found and password is valid
         // create a token
         const token = jwt.sign({ id: user.id }, 'secret cant tell', {
-          expiresIn: 86400 // expires in 24 hours
+          expiresIn: 86400, // expires in 24 hours
         });
 
         // return the information including token as JSON
@@ -182,10 +184,10 @@ class UserDetails {
     }
   }
 
-  //TODO: Should this method be called getUserByToken since we are returning a user
+  // TODO: Should this method be called getUserByToken since we are returning a user
   static getUserIdByToken(req, res) {
     try {
-      userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then(user => {
+      userDetails.findByPk(req.userId, { attributes: { exclude: ['password'] } }).then((user) => {
         // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
         if (!user) return res.status(404).send('No user found.');
         res.status(200).send(user);

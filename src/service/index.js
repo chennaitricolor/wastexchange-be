@@ -11,5 +11,5 @@ module.exports = {
   verifyToken,
   Items,
   Bids,
-  Otp
+  Otp,
 };
