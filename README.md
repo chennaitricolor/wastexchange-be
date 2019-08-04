@@ -23,15 +23,26 @@ Swagger file is also available for the endpoints.
 * Windows : run `local-startup.bat`
 * Linux and Mac : run `local-startup.sh`
 
-### 4. Latest Releases
+### 4. Creating migrations and seeds for the database
+
+* `npx sequelize migration:generate Create-Bids`
+* `npx sequelize-cli db:migrate`
+* `npx sequelize-cli db:migrate:undo:all`
+* `npx sequelize-cli seed:generate --name seed-bids`
+* `npx sequelize-cli db:seed:all`
+* `npx sequelize-cli db:seed:undo:all`
+
+For more commands/options, refer to the [full documentation](https://sequelize.org/master/manual/migrations.html#creating-first-model--and-migration-)
+
+### 5. Latest Releases
 
 * Version 0.1.0
 
-### 5. API References
+### 6. API References
 
 * Swagger endpoint: [http://localhost:7000/api-docs/](http://localhost:7000/api-docs/)
 
-### 6. Folder Structure
+### 7. Folder Structure
 
     |_src
         |_config    `Environment config`
