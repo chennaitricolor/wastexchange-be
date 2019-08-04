@@ -1,5 +1,6 @@
 /* jshint indent: 2 */
 
+// TODO: Need to delete this model since the fields have been moved into the 'UserDetails' model
 module.exports = function (sequelize, DataTypes) {
   const userMeta = sequelize.define(
     'userMeta',

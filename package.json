@@ -40,6 +40,7 @@
     "nock": "^9.6.1",
     "nodemon": "^1.18.3",
     "prettier-eslint-cli": "^5.0.0",
+    "sequelize-cli": "^5.5.0",
     "supertest": "^3.3.0"
   },
   "dependencies": {

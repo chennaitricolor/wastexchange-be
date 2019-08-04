@@ -1,11 +1,8 @@
-/* jshint indent: 2 */
-
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(
-    'bids',
-    {
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('bids', {
       id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
@@ -13,61 +10,59 @@ module.exports = function (sequelize, DataTypes) {
       },
       // TODO: Doesn't the 'sellerId' need to be a foreign-key?
       sellerId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         field: 'seller_id',
       },
       // TODO: Doesn't the 'buyerId' need to be a foreign-key?
       buyerId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: false,
         field: 'buyer_id',
       },
-      // TODO: What does this column signify? Can it be named more appropriately
-      // If this the time when the bid was captured, doesn't it need to be non-nullable?
       pDateTime: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: true,
         field: 'p_date_time',
       },
       details: {
-        type: DataTypes.JSON,
+        type: Sequelize.JSON,
         allowNull: true,
         field: 'details',
       },
-      // TODO: Can 'totalBid' be nullable?
       // TODO: Doesn't the 'totalBid' need to accommodate paise? (Looking at it from a tax perspective)?
       totalBid: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         allowNull: true,
         field: 'total_bid',
       },
       contactName: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false,
         field: 'contact_name',
       },
       status: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
         field: 'status',
       },
       // TODO: Doesn't the 'createdAt' need to be non-nullable?
       createdAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: true,
         field: 'created_at',
       },
       // TODO: Doesn't the 'updatedAt' need to be non-nullable?
       updatedAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: true,
         field: 'updated_at',
       },
       // TODO: Are we missing the 'createdBy' and 'updatedBy' audit columns?
-    },
-    {
-      tableName: 'bids',
-    },
-  );
+    });
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('bids');
+  },
 };
