@@ -4,10 +4,12 @@ require('dotenv').config();
 // Define validation for all the env vars
 const envVarsSchema = Joi.object({
   AUTH_KEY: Joi.string(),
+  // TODO: What is the need for NODE_CONFIG_ENV separate from NODE_ENV?
   NODE_ENV: Joi.string()
     .allow(['development', 'production'])
     .default('development'),
   NODE_CONFIG_ENV: Joi.string()
+    // TODO: Why the differentiation/short-form of the values?
     .allow(['dev', 'qa', 'uat', 'prod'])
     .default('dev'),
   // AIRBRAKE_PROJECT_ID: Joi.string()
