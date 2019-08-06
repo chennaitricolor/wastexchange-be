@@ -9,32 +9,27 @@ async function sendSMS(message, from = 'SMCITY', to, country = 91) {
   const postBody = {
     sender: from,
     route: '4',
-    country: '91',
+    country,
     sms: to.map(recipientNumber => ({
       message,
       to: [recipientNumber],
     })),
   };
 
-  const response = await api.post(url, postBody, {
+  await api.post(url, postBody, {
     authkey: config.authKey,
     'content-type': 'application/json',
   });
-
-  console.log(response);
 }
 
 async function sendEmail(message, subject, from = 'no-reply@indiawasteexchange.com', to) {
-  console.log(arguments);
   const url = `${emailAPI}?authkey=${config.authKey}
                           &to=${to}
                           &from=${from}
                           &body=${message}
                           &subject=${subject}`;
 
-  const response = await api.post(url);
-
-  console.log(response);
+  await api.post(url);
 }
 
 module.exports = {
