@@ -24,7 +24,8 @@ module.exports = {
 
   'buyer-order-placed': {
     sms: {
-      message: 'Dear {buyerName}. Your order request has been placed with the {sellerName}. Please wait for the seller approval. Thank you for using IndiaWasteExchange. Thank you.',
+      message:
+        'Dear {buyerName}. Your order request has been placed with the {sellerName}. Please wait for the seller approval. Thank you for using IndiaWasteExchange. Thank you.',
     },
     email: {
       message:
@@ -35,7 +36,8 @@ module.exports = {
 
   'seller-order-placed': {
     sms: {
-      message: 'Dear {sellerName}. You have received an order request from {buyerName}. Please approve/decline within 24 hours. Thank you for using IndiaWasteExchange. Thank you.',
+      message:
+        'Dear {sellerName}. You have received an order request from {buyerName}. Please approve/decline within 24 hours. Thank you for using IndiaWasteExchange. Thank you.',
     },
     email: {
       message:
@@ -46,7 +48,8 @@ module.exports = {
 
   'buyer-order-approved': {
     sms: {
-      message: 'Dear {buyerName}. Your order request has been accepted by {sellerName}. Please collect your order by the accepted timing. Thank You.',
+      message:
+        'Dear {buyerName}. Your order request has been accepted by {sellerName}. Please collect your order by the accepted timing. Thank You.',
     },
     email: {
       message:
@@ -57,7 +60,8 @@ module.exports = {
 
   'seller-order-approved': {
     sms: {
-      message: 'Dear {sellerName}. You have accepted the order from {buyerName}. Please keep your order items ready by the accepted time. Thank you.',
+      message:
+        'Dear {sellerName}. You have accepted the order from {buyerName}. Please keep your order items ready by the accepted time. Thank you.',
     },
     email: {
       message:
@@ -68,7 +72,8 @@ module.exports = {
 
   'buyer-order-declined': {
     sms: {
-      message: 'Dear {buyerName}. Your order request has been declined by {sellerName}. Please contact seller for further information. Thank You.',
+      message:
+        'Dear {buyerName}. Your order request has been declined by {sellerName}. Please contact seller for further information. Thank You.',
     },
     email: {
       message:
@@ -82,8 +87,7 @@ module.exports = {
       message: 'Dear {sellerName}. You have declined the order from {buyerName}... Thank you.',
     },
     email: {
-      message:
-        'Dear {sellerName} \n \t You have declined the order from {buyerName}. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
+      message: 'Dear {sellerName} \n \t You have declined the order from {buyerName}. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
       subject: 'You have declined a bid - indiawasteexchange.com',
     },
   },
@@ -104,8 +108,7 @@ module.exports = {
       message: 'Dear {sellerName}. {buyerName} has updated their order. Thank you.',
     },
     email: {
-      message:
-        'Dear {sellerName} \n \t {buyerName} has updated their order. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
+      message: 'Dear {sellerName} \n \t {buyerName} has updated their order. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
       subject: 'You have declined a bid - indiawasteexchange.com',
     },
   },
@@ -126,8 +129,7 @@ module.exports = {
       message: 'Dear {sellerName}. {buyerName} has cancelled their order. Thank you.',
     },
     email: {
-      message:
-        'Dear {sellerName} \n \t {buyerName} has cancelled their order. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
+      message: 'Dear {sellerName} \n \t {buyerName} has cancelled their order. Thank you. \n Thanks, \n IndiaWasteExchange Team.',
       subject: 'You have declined a bid - indiawasteexchange.com',
     },
   },
