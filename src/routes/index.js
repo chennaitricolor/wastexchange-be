@@ -26,9 +26,9 @@ module.exports = (app) => {
   // app.get('/userdetails/:detailsId', UserDetails.getUserDetailByDetailId);
 
   // items
-  app.post('/seller/:sellerId/items', Items.create);
+  app.post('/seller/:sellerId/items', verifyToken, Items.create);
   app.get('/items', verifyToken, Items.list);
-  app.get('/seller/:sellerId/items', verifyToken, Items.getItemBySellerId); // TODO: [STYLE] Can this be changed to only a filter (query param) on the index call?
+  app.get('/seller/:sellerId/items', Items.getItemBySellerId); // TODO: [STYLE] Can this be changed to only a filter (query param) on the index call?
   app.get('/items/:itemId', verifyToken, Items.getItemById);
   app.put('/items/:itemId', verifyToken, Items.modify);
   app.delete('/items/:itemId', verifyToken, Items.delete);
