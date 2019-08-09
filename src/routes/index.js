@@ -2,6 +2,10 @@ const {
   health, UserDetails, verifyToken, Items, Bids, Otp,
 } = require('../service');
 
+const {
+  verifyBuyer, verifySeller, verifyBid, isBuyer, getSeller,
+} = require('../middleware');
+
 module.exports = (app) => {
   app.use('/health', health);
   app.post('/users/register', UserDetails.create); // API route for user to signup
@@ -34,10 +38,10 @@ module.exports = (app) => {
   app.delete('/items/:itemId', verifyToken, Items.delete);
 
   // bids
-  app.post('/buyer/:buyerId/bids', verifyToken, Bids.create);
+  app.post('/buyer/:buyerId/bids', verifyToken, verifyBuyer, getSeller, Bids.create);
   app.get('/bids', verifyToken, Bids.list);
   app.get('/buyer/:buyerId/bids', verifyToken, Bids.getItemByBuyerId); // TODO: [STYLE] Can this be changed to only a filter (query param) on the index call?
   app.get('/bids/:bidId', verifyToken, Bids.getBidById);
-  app.put('/bids/:bidId', verifyToken, Bids.modify);
-  app.delete('/bids/:bidId', verifyToken, Bids.delete);
+  app.put('/bids/:bidId', verifyToken, verifyBid, Bids.modify);
+  app.delete('/bids/:bidId', verifyToken, verifyBid, Bids.delete);
 };

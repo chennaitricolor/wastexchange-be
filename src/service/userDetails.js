@@ -211,9 +211,16 @@ class UserDetails {
         // TODO: [STYLE] Move the salt to a common location so that it can be reused
         // if user is found and password is valid
         // create a token
-        const token = jwt.sign({ id: user.id }, 'secret cant tell', {
-          expiresIn: 86400, // expires in 24 hours
-        });
+        const token = jwt.sign(
+          {
+            id: user.id,
+            persona: user.persona,
+          },
+          'secret cant tell',
+          {
+            expiresIn: 86400, // expires in 24 hours
+          },
+        );
 
         // return the information including token as JSON
         res.status(200).send({ auth: true, token, approved: user.approved });

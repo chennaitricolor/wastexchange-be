@@ -1,7 +1,10 @@
 const models = require('../models');
 
-const { bids, items } = models;
+const { bids, items, userDetails } = models;
 const R = require('ramda');
+
+const notifier = require('../lib/notifier');
+const templates = require('../constants').notificationTemplates;
 
 class Bids {
   static create(req, res) {
@@ -23,10 +26,15 @@ class Bids {
           createdAt: new Date(),
           updatedAt: new Date(),
         })
-        .then(bids => res.status(201).send({
-          message: 'Your bids details are created ',
-          bids,
-        }))
+        .then((bids) => {
+          notifyBuyer('buyer-order-placed', req.buyer, req.seller);
+          notifySeller('seller-order-placed', req.buyer, req.seller);
+
+          res.status(201).send({
+            message: 'Your bids details are created ',
+            bids,
+          });
+        })
         .catch((e) => {
           res.status(500).send({ error: e.message });
         });
@@ -93,7 +101,16 @@ class Bids {
                     updatedAt: new Date(),
                   });
                 });
+                notifyBuyer('buyer-order-approved', req.buyer, req.seller);
+                notifySeller('seller-order-approved', req.buyer, req.seller);
+              } else if (status && status.toLowerCase() === 'denied') {
+                notifyBuyer('buyer-order-declined', req.buyer, req.seller);
+                notifySeller('seller-order-declined', req.buyer, req.seller);
+              } else {
+                notifyBuyer('buyer-order-edited', req.buyer, req.seller);
+                notifySeller('seller-order-edited', req.buyer, req.seller);
               }
+
               res.status(200).send({
                 message: 'bids updated successfully',
                 data: {
@@ -113,6 +130,7 @@ class Bids {
   static delete(req, res) {
     try {
       // TODO: How are we ensuring/restricting that the bid is only deleted by the buyer who bidded or an admin?
+      let sellerId;
       return bids
         .findByPk(req.params.bidId)
         .then((bid) => {
@@ -121,18 +139,37 @@ class Bids {
               message: 'bids Not Found',
             });
           }
+          sellerId = bid.sellerId;
           return bid
             .destroy()
-            .then(() => res.status(200).send({
-              message: 'bids successfully deleted',
-            }))
-            .catch(error => res.status(400).send(error));
+            .then(() => {
+              notifyBuyer('buyer-order-cancelled', req.buyer, req.seller);
+              notifySeller('seller-order-cancelled', req.buyer, req.seller);
+              res.status(200).send({
+                message: 'bids successfully deleted',
+              });
+            })
+            .catch(error => res.status(400).send(error.message));
         })
-        .catch(error => res.status(400).send(error));
+        .catch(error => res.status(400).send(error.message));
     } catch (e) {
       res.status(500).send({ error: e.message });
     }
   }
+}
+
+function notifySeller(templateId, buyer, seller) {
+  const content = templates[templateId].sms.message;
+
+  const smsMessage = content.replace('{sellerName}', seller.name).replace('{buyerName}', buyer.name);
+  notifier.sendSMS(smsMessage, undefined, [seller.mobNo, seller.altMobNo], 91);
+}
+
+function notifyBuyer(templateId, buyer, seller) {
+  const content = templates[templateId].sms.message;
+
+  const smsMessage = content.replace('{sellerName}', seller.name).replace('{buyerName}', buyer.name);
+  notifier.sendSMS(smsMessage, undefined, [buyer.mobNo, buyer.altMobNo], 91);
 }
 
 module.exports = Bids;
