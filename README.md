@@ -6,7 +6,7 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 
 1. Install [NodeJS 10.16 LTS](https://nodejs.org/en/)
 2. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
-3. Clone the [frontend](https://github.com/chennaitricolor/wastexchange-fe) and [backend](https://github.com/chennaitricolor/wastexchange-fe) repositories. This setup assumes that both repositories are present in the same directory. For example:
+3. Clone the [frontend](https://github.com/chennaitricolor/wastexchange-fe) and [backend](https://github.com/chennaitricolor/wastexchange-be) repositories. This setup assumes that both repositories are present in the same directory. For example:
 	```
 	chennaitricolor
 	├── wastexchange-be
