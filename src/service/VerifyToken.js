@@ -12,6 +12,9 @@ function verifyToken(req, res, next) {
 
     // if everything is good, save to request for use in other routes
     req.userId = decoded.id;
+    req.isAdmin = decoded.persona === 'admin';
+    req.isSeller = decoded.persona === 'seller';
+    req.isBuyer = decoded.persona === 'buyer';
     next();
   });
 }
