@@ -4,7 +4,7 @@ const path = require('path');
 
 const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line import/no-dynamic-require
-const config = require(path.join(__dirname, '/../config/database.json'))[env];
+const config = require(path.join(__dirname, '/../config/database.js'))[env];
 
 const db = {};
 

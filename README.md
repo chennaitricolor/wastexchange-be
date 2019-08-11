@@ -1,56 +1,44 @@
-# Waste Exchange Service
+# Waste Exchange Backend
 
-## Introduction
+Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 
-This repository is backend service for [indiawasteexchange.com](https://indiawasteexchange.com) and it is built in **Node.js** and uses **PostgreSQL** as database.
+## Dev Machine Setup
 
-Swagger file is also available for the endpoints.
+1. Install [NodeJS 10.16 LTS](https://nodejs.org/en/)
+2. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+3. Clone the [frontend](https://github.com/chennaitricolor/wastexchange-fe) and [backend](https://github.com/chennaitricolor/wastexchange-be) repositories. This setup assumes that both repositories are present in the same directory. For example:
+	```
+	chennaitricolor
+	├── wastexchange-be
+	└── wastexchange-fe
+	```
+4. Start dependencies (Postgres, frontend application):
+    ```
+    docker-compose up
 
-## Getting Started
+    # OR to rebuild the docker images before starting the services
+    docker-compose up --build
+    ```
+5. Install node dependencies:
+    ```
+    npm install
+    ```
+6. Creating migrations and seeds for the database
 
-### 1. Software Dependencies
+    * `npx sequelize migration:generate Create-Bids`
+    * `npx sequelize-cli db:migrate`
+    * `npx sequelize-cli db:migrate:undo:all`
+    * `npx sequelize-cli seed:generate --name seed-bids`
+    * `npx sequelize-cli db:seed:all`
+    * `npx sequelize-cli db:seed:undo:all`
 
-* GIT version ^2.15 - [Download and Install from git-scm.com](https://git-scm.com/downloads)
-* Node version 10.16.0 LTS - [ Download and Install from nodejs.org](https://nodejs.org/en/#download)
+7. Start the application and watch for changes:
+    ```
+    ./local-startup.sh or ./local-startup.bat
+    ```
 
-### 2. Installation Process
+## API References
 
-* Clone the repository
-* run the command `npm install`
+### Swagger Endpoint
 
-### 3. Build and Run
-
-* Windows : run `local-startup.bat`
-* Linux and Mac : run `local-startup.sh`
-
-### 4. Creating migrations and seeds for the database
-
-* `npx sequelize migration:generate Create-Bids`
-* `npx sequelize-cli db:migrate`
-* `npx sequelize-cli db:migrate:undo:all`
-* `npx sequelize-cli seed:generate --name seed-bids`
-* `npx sequelize-cli db:seed:all`
-* `npx sequelize-cli db:seed:undo:all`
-
-For more commands/options, refer to the [full documentation](https://sequelize.org/master/manual/migrations.html#creating-first-model--and-migration-)
-
-### 5. Latest Releases
-
-* Version 0.1.0
-
-### 6. API References
-
-* Swagger endpoint: [http://localhost:7000/api-docs/](http://localhost:7000/api-docs/)
-
-### 7. Folder Structure
-
-    |_src
-        |_config    `Environment config`
-        |_constants `Constants files`
-        |_models    `Business models`
-        |_routes    `Express routes`
-        |_service   `Business logic`
-
-## Watch Mode ( Nodemon )
-
-To run in watch mode: `npm run watch`
+[http://localhost:7000/api-docs/](http://localhost:7000/api-docs/)

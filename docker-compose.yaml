@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:10.6
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./dbdata:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: wastexchange_development
+  frontend:
+    build:
+      context: ../wastexchange-fe
+    ports:
+      - "8080:8080"
