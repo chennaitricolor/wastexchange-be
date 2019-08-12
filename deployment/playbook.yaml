@@ -30,4 +30,5 @@
         image: "{{ app_image }}:{{ app_version | default('latest') }}"
         state: started
         network_mode: host
+        restart_policy: always
         env: "{{ app_configs }}"
