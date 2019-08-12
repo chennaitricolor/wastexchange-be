@@ -42,3 +42,9 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 ### Swagger Endpoint
 
 [http://localhost:7000/api-docs/](http://localhost:7000/api-docs/)
+
+## Deployment
+
+```
+ansible-playbook -i deployment/inventory.yaml --private-key ~/.ssh/wastexchange_rsa --extra-vars "env=<staging|production> app_version=<docker-tag>" --ask-vault-pass deployment/playbook.yaml
+```
