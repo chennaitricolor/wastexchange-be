@@ -76,7 +76,7 @@ const errorHandler = (err, req, res, next) => {
 app.use(errorHandler);
 const httpServer = http.createServer(app);
 
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.ENABLE_SSL === 'true') {
   // Certificate
   const privateKey = fs.readFileSync('/mnt/letsencrypt/live/data.indiawasteexchange.com/privkey.pem', 'utf8');
   const certificate = fs.readFileSync('/mnt/letsencrypt/live/data.indiawasteexchange.com/cert.pem', 'utf8');
