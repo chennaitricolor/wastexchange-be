@@ -45,6 +45,12 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 
 ## Deployment
 
-```
-ansible-playbook -i deployment/inventory.yaml --private-key ~/.ssh/wastexchange_rsa --extra-vars "env=<staging|production> app_version=<docker-tag>" --ask-vault-pass deployment/playbook.yaml
-```
+* Install Ansible 2.8.3
+* Run the ansible playbook
+	```
+	ansible-playbook -i deployment/inventory.yaml \
+		--private-key <ssh-private-key> \
+		--extra-vars "env=<staging|prod> app_version=<docker-image-tag>" \
+		--ask-vault-pass \
+		deployment/playbook.yaml
+	```
