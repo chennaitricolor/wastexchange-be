@@ -3,12 +3,19 @@
   become: yes
   become_user: root
 
-  vars: {}
+  vars:
+    app_name: wastexchange-be
+    app_image: chennaitricolor/wastexchange-be
+    network: wastexchange
 
   tasks:
+    - name: Create {{ network }} network
+      docker_network:
+        name: "{{ network }}"
+
     - name: Get old container info
       docker_container_info:
-        name: wastexchange-be
+        name: "{{ app_name }}"
       register: result
 
     - name: Check if old contaner is running
@@ -18,14 +25,15 @@
 
     - name: Stop and remove the old container
       docker_container:
-        name: wastexchange-be
+        name: "{{ app_name }}"
         state: absent
       when: result.exists and result.container['State']['Running']
 
     - name: Start new container
       docker_container:
-        name: wastexchange-be
-        image: "chennaitricolor/wastexchange-be:{{ app_version | default('latest') }}"
+        name: "{{ app_name }}"
+        image: "{{ app_image }}:{{ app_version | default('latest') }}"
         state: started
-        network_mode: host
+        networks:
+          - name: "{{ network }}"
         env: "{{ app_configs }}"
