@@ -49,7 +49,7 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 
 ```
 # build
-docker build -t chennaitricolor/wastexchange-be:$(git rev-parse --short HEAD) -t chennaitricolor/wastexchange-be:latest .
+docker build -t chennaitricolor/wastexchange-be:$(git rev-parse --short HEAD) -t chennaitricolor/wastexchange-be:latest -f new.Dockerfile .
 
 # push
 docker push chennaitricolor/wastexchange-be:$(git rev-parse --short HEAD)
