@@ -8,4 +8,3 @@ app_configs:
   DB_USER: "{{ vault_DB_USER }}"
   DB_PWD: "{{ vault_DB_PWD }}"
   ENABLE_SSL: "false"
-  SEED_DB: "false"
