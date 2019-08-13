@@ -45,6 +45,19 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 
 ## Deployment
 
+### Build and Push Docker Image
+
+```
+# build
+docker build -t chennaitricolor/wastexchange-be:$(git rev-parse --short HEAD) -t chennaitricolor/wastexchange-be:latest .
+
+# push
+docker push chennaitricolor/wastexchange-be:$(git rev-parse --short HEAD)
+docker push chennaitricolor/wastexchange-be:latest
+```
+
+### Deploy Docker Image
+
 * Install Ansible 2.8.3
 * Run the ansible playbook
 	```
