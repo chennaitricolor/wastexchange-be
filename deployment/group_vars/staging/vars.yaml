@@ -1,7 +1,7 @@
 app_configs:
   AUTH_KEY: "{{ vault_AUTH_KEY }}"
-  NODE_ENV: "production"
-  NODE_CONFIG_ENV: "production"
+  NODE_ENV: "staging"
+  NODE_CONFIG_ENV: "staging"
   DB_HOST: "{{ vault_DB_HOST }}"
   DB_PORT: "{{ vault_DB_PORT }}"
   DB_NAME: "{{ vault_DB_NAME }}"
