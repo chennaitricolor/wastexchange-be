@@ -6,7 +6,7 @@ const envVarsSchema = Joi.object({
   AUTH_KEY: Joi.string(),
   // TODO: What is the need for NODE_CONFIG_ENV separate from NODE_ENV?
   NODE_ENV: Joi.string()
-    .allow(['development', 'production'])
+    .allow(['development', 'staging', 'production'])
     .default('development'),
   NODE_CONFIG_ENV: Joi.string()
     // TODO: Why the differentiation/short-form of the values?

@@ -15,6 +15,14 @@ module.exports = {
     dialect: "postgres",
     operatorsAliases: false
   },
+  staging: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: process.env.DB_NAME || "wastexchange_staging",
+    host: process.env.DB_HOST,
+    dialect: "postgres",
+    operatorsAliases: false
+  },
   production: {
     username: process.env.DB_USER,
     password: process.env.DB_PWD,
