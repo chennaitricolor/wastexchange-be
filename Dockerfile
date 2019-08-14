@@ -1,3 +1,4 @@
+# TODO: This file was used to create the image for deployment using Amplify. Once we move to the new deployment that @Arunvel is working on, this file can be deleted.
 FROM node:10-alpine as builder
 
 # TODO: Is there a reason why we need this multi-build pattern?
