@@ -5,7 +5,7 @@ const config = require('../config');
 
 const consoleFormat = winston.format.printf(info => JSON.stringify(info, null, '\n'));
 
-const isProductionEnvironment = () => process.env.NODE_CONFIG_ENV === 'prod';
+const isProductionEnvironment = () => process.env.NODE_ENV === 'production';
 
 const logLevel = isProductionEnvironment() ? 'info' : 'silly';
 

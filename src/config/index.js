@@ -4,14 +4,9 @@ require('dotenv').config();
 // Define validation for all the env vars
 const envVarsSchema = Joi.object({
   AUTH_KEY: Joi.string(),
-  // TODO: What is the need for NODE_CONFIG_ENV separate from NODE_ENV?
   NODE_ENV: Joi.string()
     .allow(['development', 'staging', 'production'])
     .default('development'),
-  NODE_CONFIG_ENV: Joi.string()
-    // TODO: Why the differentiation/short-form of the values?
-    .allow(['dev', 'qa', 'uat', 'prod'])
-    .default('dev'),
   // AIRBRAKE_PROJECT_ID: Joi.string()
   //   .required()
   //   .description('AirBrake Project Id'),
@@ -36,7 +31,6 @@ const {
   // eslint-disable-next-line
   AUTH_KEY,
   NODE_ENV,
-  NODE_CONFIG_ENV,
   PORT,
   DB_HOST,
   DB_NAME,
@@ -46,7 +40,7 @@ const {
 } = envVars;
 
 const config = {
-  env: NODE_CONFIG_ENV.trim(),
+  env: NODE_ENV.trim(),
   authKey: AUTH_KEY.trim(),
   db: {
     host: DB_HOST.trim(),
