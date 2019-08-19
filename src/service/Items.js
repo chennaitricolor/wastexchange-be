@@ -3,6 +3,35 @@ const models = require('../models');
 const { items } = models;
 
 class Items {
+  /**
+   * @swagger
+   * path:
+   *   /seller/{sellerId}/items:
+   *     post:
+   *       description: create items seller has put up for sale
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: sellerId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - name: items
+   *           description: items object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/Items'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: item created  successfully
+   *       tags: ['Items']
+   */
   static create(req, res) {
     try {
       const { details } = req.body;
@@ -27,6 +56,21 @@ class Items {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /items:
+   *     get:
+   *       description: get all items
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *       responses:
+   *         200:
+   *           description: item details.
+   *       tags: ['Items']
+   */
   static list(req, res) {
     try {
       return items.findAll().then(items => res.status(200).send(items));
@@ -35,6 +79,26 @@ class Items {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /seller/{sellerId}/items:
+   *     get:
+   *       description: get all seller  items
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: sellerId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: item details.
+   *       tags: ['Items']
+   */
   static getItemBySellerId(req, res) {
     try {
       // TODO: Is the 'findOne' the correct call to make?
@@ -44,6 +108,26 @@ class Items {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /items/{itemId}:
+   *     get:
+   *       description: get all items belonging to an itemid
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: itemId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: item details.
+   *       tags: ['Items']
+   */
   static getItemById(req, res) {
     try {
       return items.findByPk(req.params.itemId).then(items => res.status(200).send(items));
@@ -53,6 +137,35 @@ class Items {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /items/{itemId}:
+   *     put:
+   *       description: modify items seller has put up for sale
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: itemId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - name: items
+   *           description: items object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/modifyItems'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: item updated  successfully
+   *       tags: ['Items']
+   */
   static modify(req, res) {
     try {
       const { sellerId, details } = req.body;
@@ -88,6 +201,26 @@ class Items {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /items/{itemId}:
+   *     delete:
+   *       description: delete all items belonging to an itemid
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: itemId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: items successfully deleted.
+   *       tags: ['Items']
+   */
   static delete(req, res) {
     try {
       // TODO: How are we ensuring/restricting that the item is only deleted by the seller or an admin?
@@ -115,64 +248,6 @@ class Items {
 
 module.exports = Items;
 
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /items:
- *     get:
- *       description: get all items
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *       responses:
- *         200:
- *           description: item details.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /items/{itemId}:
- *     get:
- *       description: get all items belonging to an itemid
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: itemId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: item details.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /seller/{sellerId}/items:
- *     get:
- *       description: get all seller  items
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: sellerId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: item details.
- */
-
 /**
  * @swagger
  *
@@ -190,86 +265,4 @@ module.exports = Items;
  *          type: integer
  *       details:
  *          type: json
-
- */
-
-//
-/**
- * @swagger
- * path:
- *   /seller/{sellerId}/items:
- *     post:
- *       description: create items seller has put up for sale
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: sellerId
- *           required: true
- *           schema:
- *              type: integer
- *         - name: items
- *           description: items object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/Items'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: item created  successfully
- */
-
-//
-/**
- * @swagger
- * path:
- *   /items/{itemId}:
- *     put:
- *       description: modify items seller has put up for sale
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: itemId
- *           required: true
- *           schema:
- *              type: integer
- *         - name: items
- *           description: items object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/modifyItems'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: item updated  successfully
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /items/{itemId}:
- *     delete:
- *       description: delete all items belonging to an itemid
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: itemId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: items successfully deleted.
  */

@@ -6,6 +6,30 @@ const { userOtp } = models;
 const api = require('../lib/api');
 
 class Otp {
+  /**
+   * @swagger
+   * path:
+   *   /users/sendOtp:
+   *     post:
+   *       description: send otp
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - name: users
+   *           description: users object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/users'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: otp created  successfully
+   *       tags: ['Users']
+   */
   static async create(req, res) {
     try {
       const { emailId, mobileNo } = req.body;
@@ -53,29 +77,4 @@ module.exports = Otp;
  *       mobileNo:
  *          type: string
 
- */
-
-//
-/**
- * @swagger
- * path:
- *   /users/sendOtp:
- *     post:
- *       description: send otp
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - name: users
- *           description: users object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/users'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: otp created  successfully
  */

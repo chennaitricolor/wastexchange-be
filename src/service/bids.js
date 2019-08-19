@@ -7,6 +7,35 @@ const notifier = require('../lib/notifier');
 const templates = require('../constants').notificationTemplates;
 
 class Bids {
+  /**
+   * @swagger
+   * path:
+   *   /buyer/{buyerId}/bids:
+   *     post:
+   *       description: create bids
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: buyerId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - name: bids
+   *           description: bids object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/Bids'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: bids created successfully
+   *       tags: [Bids]
+   */
   static create(req, res) {
     try {
       const {
@@ -43,6 +72,21 @@ class Bids {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /bids:
+   *     get:
+   *       description: get all bids
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *       responses:
+   *         200:
+   *           description: bids details.
+   *       tags: [Bids]
+   */
   static list(req, res) {
     try {
       return bids.findAll().then(bids => res.status(200).send(bids));
@@ -51,6 +95,26 @@ class Bids {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /buyer/{buyerId}/bids:
+   *     get:
+   *       description: get all bids
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: buyerId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: bid details.
+   *       tags: [Bids]
+   */
   static getItemByBuyerId(req, res) {
     try {
       // TODO: Once logged in, a buyer can see a different buyers data by guessing the id
@@ -60,6 +124,26 @@ class Bids {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /bids/{bidId}:
+   *     get:
+   *       description: get all items belonging to an bidId
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: bidId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: bid details.
+   *       tags: [Bids]
+   */
   static getBidById(req, res) {
     try {
       // TODO: Once logged in, a buyer can see a different buyers data by guessing the id
@@ -69,6 +153,35 @@ class Bids {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /bids/{bidId}:
+   *     put:
+   *       description: modify bids
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: bidId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - name: bids
+   *           description: bids object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/modifyBids'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: bid updated successfully
+   *       tags: [Bids]
+   */
   static modify(req, res) {
     try {
       const {
@@ -127,6 +240,26 @@ class Bids {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /bids/{bidId}:
+   *     delete:
+   *       description: get all bids belonging to an bidId
+   *       parameters:
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - in: path
+   *           name: bidId
+   *           required: true
+   *           schema:
+   *              type: integer
+   *       responses:
+   *         200:
+   *           description: items successfully deleted.
+   *       tags: [Bids]
+   */
   static delete(req, res) {
     try {
       // TODO: How are we ensuring/restricting that the bid is only deleted by the buyer who bidded or an admin?
@@ -173,64 +306,6 @@ function notifyBuyer(templateId, buyer, seller) {
 }
 
 module.exports = Bids;
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /bids:
- *     get:
- *       description: get all bids
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *       responses:
- *         200:
- *           description: bids details.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /bids/{bidId}:
- *     get:
- *       description: get all items belonging to an bidId
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: bidId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: bid details.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /buyer/{buyerId}/bids:
- *     get:
- *       description: get all bids
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: buyerId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: bid details.
- */
 
 /**
  * @swagger
@@ -284,85 +359,4 @@ module.exports = Bids;
  *         type: date
  *       status:
  *         type: string
- */
-
-//
-/**
- * @swagger
- * path:
- *   /buyer/{buyerId}/bids:
- *     post:
- *       description: create bids
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: buyerId
- *           required: true
- *           schema:
- *              type: integer
- *         - name: bids
- *           description: bids object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/Bids'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: bids created successfully
- */
-
-//
-/**
- * @swagger
- * path:
- *   /bids/{bidId}:
- *     put:
- *       description: modify bids
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: bidId
- *           required: true
- *           schema:
- *              type: integer
- *         - name: bids
- *           description: bids object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/modifyBids'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: bid updated successfully
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /bids/{bidId}:
- *     delete:
- *       description: get all bids belonging to an bidId
- *       parameters:
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - in: path
- *           name: bidId
- *           required: true
- *           schema:
- *              type: integer
- *       responses:
- *         200:
- *           description: items successfully deleted.
  */

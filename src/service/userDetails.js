@@ -8,6 +8,27 @@ const templates = require('../constants').notificationTemplates;
 const { items, userDetails, userOtp } = models;
 
 class UserDetails {
+  /**
+   * @swagger
+   * path:
+   *   /users/register:
+   *     post:
+   *       description: signup (create new user meta)
+   *       produces:
+   *        - application/json
+   *       parameters:
+   *        - name: user
+   *          description: User object
+   *          in:  body
+   *          required: true
+   *          type: string
+   *          schema:
+   *           $ref: '#/definitions/UserDetails'
+   *       responses:
+   *         201:
+   *           description: user created successfully
+   *       tags: ['Users']
+   */
   static create(req, res) {
     const self = this;
     try {
@@ -72,6 +93,17 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users:
+   *     get:
+   *       description: get all userdetails
+   *       responses:
+   *         200:
+   *           description: user details.
+   *       tags: ['Users']
+   */
   static list(req, res) {
     // TODO: Do we need pagination?
     const whereClause = pick(req.query, ['persona', 'name', 'login', 'emailId', 'approved', 'city']);
@@ -85,6 +117,26 @@ class UserDetails {
       .then(users => res.status(200).send(users));
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/{id}:
+   *     get:
+   *       description: get user details belonging to an id
+   *       parameters:
+   *         - in: path
+   *           name: id
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *       responses:
+   *         200:
+   *           description: user details.
+   *       tags: ['Users']
+   */
   static getUserDetailById(req, res) {
     try {
       // TODO: [AUTH] Are we exposing details of other users without checking current logged-in user's privilege?
@@ -95,6 +147,35 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/{id}:
+   *     put:
+   *       description: modify userdetails
+   *       parameters:
+   *         - in: path
+   *           name: id
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *         - name: userdetails
+   *           description: userdetails object
+   *           in:  body
+   *           required: true
+   *           type: string
+   *           schema:
+   *            $ref: '#/definitions/modifyUserDetails'
+   *       produces:
+   *        - application/json
+   *       responses:
+   *         200:
+   *           description: userdetails updated successfully
+   *       tags: ['Users']
+   */
   static modify(req, res) {
     try {
       // TODO: [AUTH] Does this mean that the password is sent unencrypted from the frontend?
@@ -146,6 +227,26 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/{id}:
+   *     delete:
+   *       description: delete all userdetails belonging to an id
+   *       parameters:
+   *         - in: path
+   *           name: id
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *       responses:
+   *         200:
+   *           description: userdetails successfully deleted.
+   *       tags: ['Users']
+   */
   static delete(req, res) {
     try {
       // TODO: How are we ensuring that the currently logged-in user is privileged to perform this action?
@@ -170,6 +271,26 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/{id}/approve:
+   *     put:
+   *       description: approve userdetail belonging to an id
+   *       parameters:
+   *         - in: path
+   *           name: id
+   *           required: true
+   *           schema:
+   *              type: integer
+   *         - in: header
+   *           name: x-access-token
+   *           required: true
+   *       responses:
+   *         200:
+   *           description: userdetails successfully approved.
+   *       tags: ['Users']
+   */
   static approve(req, res) {
     try {
       // TODO: How are we ensuring that the currently logged-in user is privileged to perform this action?
@@ -195,6 +316,27 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/login:
+   *     post:
+   *       description: login
+   *       produces:
+   *        - application/json
+   *       parameters:
+   *        - name: user
+   *          description: User object
+   *          in:  body
+   *          required: true
+   *          type: string
+   *          schema:
+   *           $ref: '#/definitions/loginSchema'
+   *       responses:
+   *         200:
+   *           description: user logged in  successfully
+   *       tags: ['Users']
+   */
   static login(req, res) {
     try {
       userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
@@ -230,6 +372,21 @@ class UserDetails {
     }
   }
 
+  /**
+   * @swagger
+   * path:
+   *   /users/me:
+   *     get:
+   *       description: get user meta with jwt
+   *       parameters:
+   *          - in: header
+   *            name: x-access-token
+   *            required: true
+   *       responses:
+   *         200:
+   *           description: user details.
+   *       tags: ['Users']
+   */
   // TODO: Should this method be called getUserByToken since we are returning a user
   static getUserIdByToken(req, res) {
     try {
@@ -254,39 +411,6 @@ function notifyUser(templateId, user) {
 }
 
 module.exports = UserDetails;
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /users:
- *     get:
- *       description: get all userdetails
- *       responses:
- *         200:
- *           description: user details.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /users/{id}:
- *     get:
- *       description: get user details belonging to an id
- *       parameters:
- *         - in: path
- *           name: id
- *           required: true
- *           schema:
- *              type: integer
- *         - in: header
- *           name: x-access-token
- *           required: true
- *       responses:
- *         200:
- *           description: user details.
- */
 
 /**
  * @swagger
@@ -374,136 +498,4 @@ module.exports = UserDetails;
  *          type: string
  *       password:
  *          type: string
- */
-
-// Swagger Definitions
-/**
-* @swagger
-* path:
-*   /users/register:
-*     post:
-*       description: signup (create new user meta)
-*       produces:
-*        - application/json
-*       parameters:
-*        - name: user
-*          description: User object
-*          in:  body
-*          required: true
-*          type: string
-*          schema:
-*           $ref: '#/definitions/UserDetails'
-*       responses:
-*         201:
-*           description: user created successfully
-
-*/
-//
-
-/**
- * @swagger
- * path:
- *   /users/login:
- *     post:
- *       description: login
- *       produces:
- *        - application/json
- *       parameters:
- *        - name: user
- *          description: User object
- *          in:  body
- *          required: true
- *          type: string
- *          schema:
- *           $ref: '#/definitions/loginSchema'
- *       responses:
- *         200:
- *           description: user logged in  successfully
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /users/me:
- *     get:
- *       description: get user meta with jwt
- *       parameters:
- *          - in: header
- *            name: x-access-token
- *            required: true
- *       responses:
- *         200:
- *           description: user details.
- */
-
-/**
- * @swagger
- * path:
- *   /users/{id}:
- *     put:
- *       description: modify userdetails
- *       parameters:
- *         - in: path
- *           name: id
- *           required: true
- *           schema:
- *              type: integer
- *         - in: header
- *           name: x-access-token
- *           required: true
- *         - name: userdetails
- *           description: userdetails object
- *           in:  body
- *           required: true
- *           type: string
- *           schema:
- *            $ref: '#/definitions/modifyUserDetails'
- *       produces:
- *        - application/json
- *       responses:
- *         200:
- *           description: userdetails updated successfully
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /users/{id}:
- *     delete:
- *       description: delete all userdetails belonging to an id
- *       parameters:
- *         - in: path
- *           name: id
- *           required: true
- *           schema:
- *              type: integer
- *         - in: header
- *           name: x-access-token
- *           required: true
- *       responses:
- *         200:
- *           description: userdetails successfully deleted.
- */
-
-// Swagger Definitions
-/**
- * @swagger
- * path:
- *   /users/{id}/approve:
- *     put:
- *       description: approve userdetail belonging to an id
- *       parameters:
- *         - in: path
- *           name: id
- *           required: true
- *           schema:
- *              type: integer
- *         - in: header
- *           name: x-access-token
- *           required: true
- *       responses:
- *         200:
- *           description: userdetails successfully approved.
  */

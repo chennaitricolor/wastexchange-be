@@ -1,13 +1,5 @@
 const router = require('express').Router();
 
-const healthCheck = async (req, res) => {
-  res.json({ state: true, message: 'Service is Alive!', date: new Date().toISOString() });
-};
-
-router.route('/').get(healthCheck);
-
-module.exports = router;
-// Swagger Definitions
 /**
  * @swagger
  * path:
@@ -29,4 +21,12 @@ module.exports = router;
  *               date:
  *                 type: string
  *                 description: The present date time in ISO format
+ *       tags: ['Health']
  */
+const healthCheck = async (req, res) => {
+  res.json({ state: true, message: 'Service is Alive!', date: new Date().toISOString() });
+};
+
+router.route('/').get(healthCheck);
+
+module.exports = router;
