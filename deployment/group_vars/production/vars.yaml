@@ -1,0 +1,9 @@
+app_configs:
+  AUTH_KEY: "{{ vault_AUTH_KEY }}"
+  NODE_ENV: "production"
+  DB_HOST: "{{ vault_DB_HOST }}"
+  DB_PORT: "{{ vault_DB_PORT }}"
+  DB_NAME: "{{ vault_DB_NAME }}"
+  DB_USER: "{{ vault_DB_USER }}"
+  DB_PWD: "{{ vault_DB_PWD }}"
+  ENABLE_SSL: "false"
