@@ -7,11 +7,11 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
 1. Install [NodeJS 10.16 LTS](https://nodejs.org/en/)
 2. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
 3. Clone the [frontend](https://github.com/chennaitricolor/wastexchange-fe) and [backend](https://github.com/chennaitricolor/wastexchange-be) repositories. This setup assumes that both repositories are present in the same directory. For example:
-	```
-	chennaitricolor
-	├── wastexchange-be
-	└── wastexchange-fe
-	```
+  ```
+  chennaitricolor
+  ├── wastexchange-be
+  └── wastexchange-fe
+  ```
 4. Start dependencies (Postgres, frontend application):
     ```
     docker-compose up
@@ -60,10 +60,10 @@ docker push chennaitricolor/wastexchange-be:latest
 
 * Install Ansible 2.8.3
 * Run the ansible playbook
-	```
-	ansible-playbook -i deployment/inventory.yaml \
-		--private-key <ssh-private-key> \
-		--extra-vars "env=<staging|prod> app_version=<docker-image-tag>" \
-		--ask-vault-pass \
-		deployment/playbook.yaml
-	```
+  ```
+  ansible-playbook -i deployment/inventory.yaml \
+    --private-key <ssh-private-key> \
+    --extra-vars "env=<staging|production> app_version=$(git rev-parse --short HEAD)" \
+    --ask-vault-pass \
+    deployment/playbook.yaml
+  ```
