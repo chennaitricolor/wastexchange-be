@@ -67,3 +67,5 @@ docker push chennaitricolor/wastexchange-be:latest
     --ask-vault-pass \
     deployment/playbook.yaml
   ```
+* Data about the running instances can be found [here](deployment/inventory.yaml)
+* Sensitive info can be found [here](deployment/group_vars/staging/vault.yaml) - but, for which you will need to contact one of the codebase-admins for decryption.
