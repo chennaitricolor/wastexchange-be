@@ -198,7 +198,7 @@ class Bids {
               contactName: contactName || bids.contactName,
               buyerId: buyerId || bids.buyerId,
               pDateTime: pDateTime || bids.pDateTime,
-              totalBid: totalBid || bids.totalBid,
+              totalBid: totalBid ,
               status: status || bids.status,
               updatedAt: new Date(),
             })
