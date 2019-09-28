@@ -10,6 +10,7 @@ module.exports = (app) => {
   app.use('/health', health);
   app.post('/users/register', UserDetails.create); // API route for user to signup
   app.post('/users/login', UserDetails.login);
+  app.post('/users/refresh-token', UserDetails.refreshToken);
   app.post('/users/sendOtp', Otp.create);
   app.put('/users/:id/approve', verifyToken, UserDetails.approve);
   app.get('/users/me', verifyToken, UserDetails.getUserIdByToken);
