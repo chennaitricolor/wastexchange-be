@@ -348,7 +348,7 @@ class UserDetails {
 
         // check if the password is valid
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+        if (!passwordIsValid) return res.status(401).send('Invalid login credentials');
 
         // TODO: [STYLE] Move the salt to a common location so that it can be reused
         // if user is found and password is valid
