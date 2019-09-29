@@ -198,7 +198,7 @@ class Bids {
               contactName: contactName || bids.contactName,
               buyerId: buyerId || bids.buyerId,
               pDateTime: pDateTime || bids.pDateTime,
-              totalBid: totalBid ,
+              totalBid,
               status: status || bids.status,
               updatedAt: new Date(),
             })
@@ -326,7 +326,7 @@ module.exports = Bids;
  *       sellerId:
  *         type: integer
  *       totalBid:
- *         type: integer
+ *         type: decimal
  *       pDateTime:
  *         type: date
  *       contactName:
@@ -352,7 +352,7 @@ module.exports = Bids;
  *       buyerId:
  *         type: integer
  *       totalBid:
- *         type: integer
+ *         type: decimal
  *       contactName:
  *         type: string
  *       pDateTime:

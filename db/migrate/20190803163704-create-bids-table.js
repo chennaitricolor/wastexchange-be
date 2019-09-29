@@ -30,7 +30,6 @@ module.exports = {
         allowNull: true,
         field: 'details',
       },
-      // TODO: Doesn't the 'totalBid' need to accommodate paise? (Looking at it from a tax perspective)?
       totalBid: {
         type: Sequelize.INTEGER,
         allowNull: true,
