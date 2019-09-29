@@ -1,11 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pick = require('object.pick');
+const sequelize = require('sequelize');
 const models = require('../models');
 const notifier = require('../lib/notifier');
 const templates = require('../constants').notificationTemplates;
 
-const { items, userDetails, userOtp } = models;
+const {
+  items, userDetails, userOtp, userTokens,
+} = models;
 
 class UserDetails {
   /**
@@ -67,6 +70,7 @@ class UserDetails {
                 createdAt: new Date(),
                 updatedAt: new Date(),
               });
+              // TODO: [STYLE] Move the salt to a common location so that it can be reused
               const token = jwt.sign({ id: userData.id }, 'secret cant tell', {
                 // TODO: Token expiry constant time be declared a constant as it's used in 2 places - create and login.
                 expiresIn: 86400, // expires in 24 hours
@@ -339,37 +343,149 @@ class UserDetails {
    */
   static login(req, res) {
     try {
-      userDetails.findOne({ where: { loginId: req.body.loginId } }).then((user) => {
-        // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
-        if (!user) return res.status(404).send('No user found.');
+      userDetails
+        .findOne({ where: { loginId: req.body.loginId } })
+        .then((user) => {
+          // TODO: [AUTH] Is it a security loophole that we expose whether such a userId exists or not?
+          if (!user) return res.status(404).send('No user found.');
 
-        // check if the user has been approved
-        if (user.approved === false && (user.persona === 'buyer' || user.persona === 'seller')) return res.status(401).send('The user has not yet been approved by an admin');
+          // check if the password is valid
+          const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+          if (!passwordIsValid) return res.status(401).send('Invalid login credentials');
 
-        // check if the password is valid
-        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send('Invalid login credentials');
+          // check if the user has been approved
+          if (user.approved === false && (user.persona === 'buyer' || user.persona === 'seller')) return res.status(401).send('The user has not yet been approved by an admin');
 
-        // TODO: [STYLE] Move the salt to a common location so that it can be reused
-        // if user is found and password is valid
-        // create a token
-        const token = jwt.sign(
-          {
-            id: user.id,
-            persona: user.persona,
-          },
-          'secret cant tell',
-          {
-            expiresIn: 86400, // expires in 24 hours
-          },
-        );
-
-        // return the information including token as JSON
-        res.status(200).send({ auth: true, token, approved: user.approved });
-      });
+          return UserDetails._createTokenPair(user.id, user.persona).then(userToken => res.status(200).send({
+            auth: true,
+            token: userToken.authToken,
+            approved: user.approved,
+            refreshToken: userToken.refreshToken,
+            authTokenExpiry: userToken.authTokenExpiry,
+            refreshTokenExpiry: userToken.refreshTokenExpiry,
+          }));
+        })
+        .catch((e) => {
+          res.status(500).send({ error: e.message });
+        });
     } catch (e) {
       res.status(500).send({ error: e.message });
     }
+  }
+
+  /**
+   * @swagger
+   * path:
+   *   /users/refresh-token:
+   *     post:
+   *       description: refresh token
+   *       produces:
+   *        - application/json
+   *       parameters:
+   *        - name: token pair
+   *          description: auth token and refresh token
+   *          in:  body
+   *          required: true
+   *          type: string
+   *          schema:
+   *           $ref: '#/definitions/refreshTokenSchema'
+   *       responses:
+   *         200:
+   *           description: refresh token generated successfully
+   *       tags: ['Users']
+   */
+  static refreshToken(req, res) {
+    // TODO: [STYLE] Move the salt to a common location so that it can be reused
+    jwt.verify(req.body.refreshToken, 'secret cant tell', (err, decoded) => {
+      if (err) {
+        return res.status(401).send({
+          auth: false,
+          message: 'Invalid refresh token.',
+        });
+      }
+
+      const userId = decoded.id;
+      const persona = decoded.persona;
+      let oldToken;
+      let newToken;
+      let transaction;
+
+      userTokens
+        .findOne({
+          where: {
+            authToken: req.body.authToken,
+            refreshToken: req.body.refreshToken,
+          },
+        })
+        .then((refreshToken) => {
+          if (!refreshToken) {
+            return Promise.reject({
+              error: new Error('Refresh token not found'),
+              status: 404,
+            });
+          }
+
+          if (refreshToken.isUsed) {
+            return Promise.reject({
+              error: new Error('Refresh token is not valid'),
+              status: 400,
+            });
+          }
+          oldToken = refreshToken;
+          return models.sequelize.transaction();
+        })
+        .then((t) => {
+          transaction = t;
+          return UserDetails._createTokenPair(userId, persona, transaction);
+        })
+        .then((userToken) => {
+          newToken = userToken;
+          oldToken.isUsed = true;
+          return oldToken.save({ transaction });
+        })
+        .then(() => {
+          transaction.commit();
+          return res.status(200).send({
+            auth: true,
+            token: newToken.authToken,
+            refreshToken: newToken.refreshToken,
+            authTokenExpiry: newToken.authTokenExpiry,
+            refreshTokenExpiry: newToken.refreshTokenExpiry,
+          });
+        })
+        .catch((e) => {
+          const message = e.error ? e.error.message : e.message;
+          res.status(e.status || 500).send({ error: message });
+        });
+    });
+  }
+
+  static _createTokenPair(userId, persona) {
+    // if user is found and password is valid
+    // create a token
+    const userInfo = {
+      id: userId,
+      persona,
+    };
+    // TODO: [STYLE] Move the salt to a common location so that it can be reused
+    const token = jwt.sign(userInfo, 'secret cant tell', {
+      expiresIn: 86400, // expires in 24 hours
+    });
+
+    // TODO: [STYLE] Move the salt to a common location so that it can be reused
+    const refreshToken = jwt.sign(userInfo, 'secret cant tell', {
+      expiresIn: 30 * 24 * 60 * 60, // expires in 30 days
+    });
+
+    const now = new Date();
+
+    return userTokens.create({
+      userId,
+      authToken: token,
+      refreshToken,
+      authTokenExpiry: now.setDate(now.getDate() + 1),
+      refreshTokenExpiry: now.setDate(now.getDate() + 30),
+    });
   }
 
   /**
@@ -498,4 +614,12 @@ module.exports = UserDetails;
  *          type: string
  *       password:
  *          type: string
+ *
+ *   refreshTokenSchema:
+ *     type: object
+ *     properties:
+ *       authToken:
+ *         type: string
+ *       refreshToken:
+ *         type: string
  */
