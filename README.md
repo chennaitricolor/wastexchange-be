@@ -25,7 +25,7 @@ Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
     ```
 6. Creating migrations and seeds for the database
 
-    * `npx sequelize migration:generate Create-Bids`
+    * `npx sequelize migration:generate --name Create-Bids`
     * `npx sequelize-cli db:migrate`
     * `npx sequelize-cli db:migrate:undo:all`
     * `npx sequelize-cli seed:generate --name seed-bids`

@@ -36,7 +36,6 @@ module.exports = function (sequelize, DataTypes) {
         field: 'details',
       },
       // TODO: Can 'totalBid' be nullable?
-      // TODO: Doesn't the 'totalBid' need to accommodate paise? (Looking at it from a tax perspective)?
       totalBid: {
         type: DataTypes.INTEGER,
         allowNull: true,
