@@ -18,5 +18,4 @@ Dockerfile
 heroku.yml
 jest.config.js
 local.Dockerfile
-new.Dockerfile
 node_modules
