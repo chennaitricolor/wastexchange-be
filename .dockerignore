@@ -9,7 +9,6 @@
 .vscode
 *.bat
 *.md
-*.sh
 coverage
 dbdata
 deployment
