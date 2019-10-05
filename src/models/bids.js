@@ -37,9 +37,14 @@ module.exports = function (sequelize, DataTypes) {
       },
       // TODO: Can 'totalBid' be nullable?
       totalBid: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
         field: 'total_bid',
+        get() {
+          // Workaround until sequelize issue https://github.com/sequelize/sequelize/issues/8019 is fixed
+          const value = this.getDataValue('totalBid');
+          return value === null ? null : parseFloat(value);
+        }
       },
       contactName: {
         type: DataTypes.TEXT,
