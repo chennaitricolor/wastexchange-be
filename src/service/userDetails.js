@@ -4,9 +4,11 @@ const pick = require('object.pick');
 const sequelize = require('sequelize');
 const models = require('../models');
 const notifier = require('../lib/notifier');
-const templates = require('../constants').notificationTemplates;
 const _ = require('lodash');
 const moment = require('moment');
+
+const templates = require('../constants').notificationTemplates;
+const expires = require('../constants').expires;
 
 const {
   items, userDetails, userOtp, userTokens,
@@ -446,7 +448,7 @@ class UserDetails {
         })
         .then((t) => {
           transaction = t;
-          return UserDetails._createTokenPair(userId, persona, platform);
+          return UserDetails._createTokenPair(userId, persona, platform, transaction);
         })
         .then((userToken) => {
           newToken = userToken;
@@ -465,13 +467,18 @@ class UserDetails {
         })
         .catch((e) => {
           const message = e.error ? e.error.message : e.message;
+          transaction && transaction.rollback();
           res.status(e.status || 500).send({ error: message });
         });
     });
   }
 
-  static _createTokenPair(userId, persona, platform) {
+  static _createTokenPair(userId, persona, platform, transaction) {
     let isMobilePlatform = platform && (_.includes(platform.toLowerCase(), 'ios') || _.includes(platform.toLowerCase(), 'android'))
+    let authTokenExpiryInSeconds, refreshTokenExpiryInSeconds;
+
+    authTokenExpiryInSeconds = isMobilePlatform ? expires.inSixMonths : expires.inADay;
+    refreshTokenExpiryInSeconds = isMobilePlatform ? expires.inSevenMonths : expires.inAMonth;
 
     const userInfo = {
       id: userId,
@@ -480,13 +487,13 @@ class UserDetails {
     // TODO: [STYLE] Move the salt to a common location so that it can be reused
     // expiresIn format: seconds (days * hours * minutes * seconds)
     const token = jwt.sign(userInfo, 'secret cant tell', {
-      expiresIn: isMobilePlatform ? (180 * 24 * 60 * 60) : (1 * 24 * 60 * 60),
+      expiresIn: authTokenExpiryInSeconds,
     });
 
     // TODO: [STYLE] Move the salt to a common location so that it can be reused
     // expiresIn format: seconds (days * hours * minutes * seconds)
     const refreshToken = jwt.sign(userInfo, 'secret cant tell', {
-      expiresIn: isMobilePlatform ? ((180 + 30) * 24 * 60 * 60) : (30 * 24 * 60 * 60),
+      expiresIn: refreshTokenExpiryInSeconds,
     });
 
     const now = new Date();
@@ -495,9 +502,9 @@ class UserDetails {
       userId,
       authToken: token,
       refreshToken,
-      authTokenExpiry: moment().add(isMobilePlatform? 180 : 1, 'days'),
-      refreshTokenExpiry: moment().add(isMobilePlatform? (180 + 30) : 30, 'days'),
-    });
+      authTokenExpiry: moment().add(authTokenExpiryInSeconds, 'seconds'),
+      refreshTokenExpiry: moment().add(refreshTokenExpiryInSeconds, 'seconds'),
+    }, {transaction: transaction});
   }
 
   /**
