@@ -2,10 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pick = require('object.pick');
 const sequelize = require('sequelize');
-const models = require('../models');
-const notifier = require('../lib/notifier');
 const _ = require('lodash');
 const moment = require('moment');
+const models = require('../models');
+const notifier = require('../lib/notifier');
 
 const templates = require('../constants').notificationTemplates;
 const expires = require('../constants').expires;
@@ -350,7 +350,7 @@ class UserDetails {
    */
   static login(req, res) {
     try {
-      let platform = req.headers['x-wstexchng-platform']
+      const platform = req.headers['x-wstexchng-platform'];
       userDetails
         .findOne({ where: { loginId: req.body.loginId } })
         .then((user) => {
@@ -417,7 +417,7 @@ class UserDetails {
 
       const userId = decoded.id;
       const persona = decoded.persona;
-      const platform = req.headers['x-wstexchng-platform']
+      const platform = req.headers['x-wstexchng-platform'];
       let oldToken;
       let newToken;
       let transaction;
@@ -474,8 +474,9 @@ class UserDetails {
   }
 
   static _createTokenPair(userId, persona, platform, transaction) {
-    let isMobilePlatform = platform && (_.includes(platform.toLowerCase(), 'ios') || _.includes(platform.toLowerCase(), 'android'))
-    let authTokenExpiryInSeconds, refreshTokenExpiryInSeconds;
+    const isMobilePlatform = platform && (_.includes(platform.toLowerCase(), 'ios') || _.includes(platform.toLowerCase(), 'android'));
+    let authTokenExpiryInSeconds,
+      refreshTokenExpiryInSeconds;
 
     authTokenExpiryInSeconds = isMobilePlatform ? expires.inSixMonths : expires.inADay;
     refreshTokenExpiryInSeconds = isMobilePlatform ? expires.inSevenMonths : expires.inAMonth;
@@ -504,7 +505,7 @@ class UserDetails {
       refreshToken,
       authTokenExpiry: moment().add(authTokenExpiryInSeconds, 'seconds'),
       refreshTokenExpiry: moment().add(refreshTokenExpiryInSeconds, 'seconds'),
-    }, {transaction: transaction});
+    }, { transaction });
   }
 
   /**

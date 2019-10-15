@@ -44,7 +44,7 @@ module.exports = function (sequelize, DataTypes) {
           // Workaround until sequelize issue https://github.com/sequelize/sequelize/issues/8019 is fixed
           const value = this.getDataValue('totalBid');
           return value === null ? null : parseFloat(value);
-        }
+        },
       },
       contactName: {
         type: DataTypes.TEXT,
