@@ -5,6 +5,8 @@ const sequelize = require('sequelize');
 const models = require('../models');
 const notifier = require('../lib/notifier');
 const templates = require('../constants').notificationTemplates;
+const _ = require('lodash');
+const moment = require('moment');
 
 const {
   items, userDetails, userOtp, userTokens,
@@ -329,6 +331,9 @@ class UserDetails {
    *       produces:
    *        - application/json
    *       parameters:
+   *        - name: x-wstexchng-platform
+   *          description: platform value based on which auth and refresh token expiry will be set
+   *          in: x-wstexchng-platform
    *        - name: user
    *          description: User object
    *          in:  body
@@ -343,6 +348,7 @@ class UserDetails {
    */
   static login(req, res) {
     try {
+      let platform = req.headers['x-wstexchng-platform']
       userDetails
         .findOne({ where: { loginId: req.body.loginId } })
         .then((user) => {
@@ -356,7 +362,7 @@ class UserDetails {
           // check if the user has been approved
           if (user.approved === false && (user.persona === 'buyer' || user.persona === 'seller')) return res.status(401).send('The user has not yet been approved by an admin');
 
-          return UserDetails._createTokenPair(user.id, user.persona).then(userToken => res.status(200).send({
+          return UserDetails._createTokenPair(user.id, user.persona, platform).then(userToken => res.status(200).send({
             auth: true,
             token: userToken.authToken,
             approved: user.approved,
@@ -382,6 +388,9 @@ class UserDetails {
    *       produces:
    *        - application/json
    *       parameters:
+   *        - name: x-wstexchng-platform
+   *          description: platform value based on which auth and refresh token expiry will be set
+   *          in: x-wstexchng-platform
    *        - name: token pair
    *          description: auth token and refresh token
    *          in:  body
@@ -406,6 +415,7 @@ class UserDetails {
 
       const userId = decoded.id;
       const persona = decoded.persona;
+      const platform = req.headers['x-wstexchng-platform']
       let oldToken;
       let newToken;
       let transaction;
@@ -436,7 +446,7 @@ class UserDetails {
         })
         .then((t) => {
           transaction = t;
-          return UserDetails._createTokenPair(userId, persona, transaction);
+          return UserDetails._createTokenPair(userId, persona, platform);
         })
         .then((userToken) => {
           newToken = userToken;
@@ -460,21 +470,23 @@ class UserDetails {
     });
   }
 
-  static _createTokenPair(userId, persona) {
-    // if user is found and password is valid
-    // create a token
+  static _createTokenPair(userId, persona, platform) {
+    let isMobilePlatform = platform && (_.includes(platform.toLowerCase(), 'ios') || _.includes(platform.toLowerCase(), 'android'))
+
     const userInfo = {
       id: userId,
       persona,
     };
     // TODO: [STYLE] Move the salt to a common location so that it can be reused
+    // expiresIn format: seconds (days * hours * minutes * seconds)
     const token = jwt.sign(userInfo, 'secret cant tell', {
-      expiresIn: 86400, // expires in 24 hours
+      expiresIn: isMobilePlatform ? (180 * 24 * 60 * 60) : (1 * 24 * 60 * 60),
     });
 
     // TODO: [STYLE] Move the salt to a common location so that it can be reused
+    // expiresIn format: seconds (days * hours * minutes * seconds)
     const refreshToken = jwt.sign(userInfo, 'secret cant tell', {
-      expiresIn: 30 * 24 * 60 * 60, // expires in 30 days
+      expiresIn: isMobilePlatform ? ((180 + 30) * 24 * 60 * 60) : (30 * 24 * 60 * 60),
     });
 
     const now = new Date();
@@ -483,8 +495,8 @@ class UserDetails {
       userId,
       authToken: token,
       refreshToken,
-      authTokenExpiry: now.setDate(now.getDate() + 1),
-      refreshTokenExpiry: now.setDate(now.getDate() + 30),
+      authTokenExpiry: moment().add(isMobilePlatform? 180 : 30, 'days'), // now.setDate(now.getDate() + 1),
+      refreshTokenExpiry: moment().add(isMobilePlatform? (180 + 30) : 30, 'days'),
     });
   }
 
