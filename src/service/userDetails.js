@@ -495,7 +495,7 @@ class UserDetails {
       userId,
       authToken: token,
       refreshToken,
-      authTokenExpiry: moment().add(isMobilePlatform? 180 : 30, 'days'), // now.setDate(now.getDate() + 1),
+      authTokenExpiry: moment().add(isMobilePlatform? 180 : 1, 'days'),
       refreshTokenExpiry: moment().add(isMobilePlatform? (180 + 30) : 30, 'days'),
     });
   }
