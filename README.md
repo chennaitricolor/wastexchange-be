@@ -1,6 +1,6 @@
 # Waste Exchange Backend
 
-Backend for [indiawasteexchange.com](https://indiawasteexchange.com).
+Backend for [indiawasteexchange.com](https://www.indiawasteexchange.com/).
 
 ## Dev Machine Setup
 
@@ -69,3 +69,12 @@ docker push chennaitricolor/wastexchange-be:latest
   ```
 * Data about the running instances can be found [here](deployment/inventory.yaml)
 * Sensitive info can be found [here](deployment/group_vars/staging/vault.yaml) - but, for which you will need to contact one of the codebase-admins for decryption.
+
+### Interesting urls:
+
+| Env | URL |
+| --- | --- |
+| Staging env (BE) | https://staging-env.indiawasteexchange.com/api/ |
+| Production env (BE) | https://www.indiawasteexchange.com/api/ |
+| CI | |
+| Trello | https://trello.com/b/LxUGt20J/waste-exchange |
