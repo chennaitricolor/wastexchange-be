@@ -23,7 +23,7 @@ Backend for [indiawasteexchange.com](https://www.indiawasteexchange.com/).
     ```
     npm install
     ```
-6. Creating migrations and seeds for the database
+6. Creating migrations and seeds for the database (_ONLY FYI - not needed if you are not going to edit the db schema_)
 
     * `npx sequelize migration:generate --name Create-Bids`
     * `npx sequelize-cli db:migrate`
