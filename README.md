@@ -78,3 +78,19 @@ docker push chennaitricolor/wastexchange-be:latest
 | Production env (BE) | https://www.indiawasteexchange.com/api/ |
 | CI | |
 | Trello | https://trello.com/b/LxUGt20J/waste-exchange |
+
+
+### To connect to the AWS db from local
+```
+ssh -i <ssh-key-file> -L 5000:<rds-endpoint>:5432 ubuntu@<ec2-instance-name>
+```
+IN a DIFFERENT terminal tab:
+If needing password/other details for db connection, need to decrypt the vault.yml file for the appropriate env:
+```
+ansible-vault decrypt deployment/group_vars/production/vault.yaml
+```
+Using the values from the decrypted file, connect to the psql db:
+```
+psql -h localhost -p 5000 -U <db-username> <db-name>
+```
+TERMINATE the ssl connection!!!!!
