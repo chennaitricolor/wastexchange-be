@@ -20,7 +20,7 @@ async function verifyBid(req, res, next) {
   }
 
   if (req.isSeller) {
-    bidQuery.where.seller = req.userId;
+    bidQuery.where.sellerId = req.userId;
   }
 
   try {
