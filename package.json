@@ -81,7 +81,7 @@
     "winston": "^3.0.0",
     "winston-context": "0.0.7",
     "winston-transport": "^4.2.0",
-    "ws": "^6.0.0"
+    "ws": "^7.4.6"
   },
   "private": true
 }
