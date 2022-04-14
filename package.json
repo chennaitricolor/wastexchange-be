@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "airbrake-js": "^1.4.6",
-    "async": "^2.6.1",
+    "async": "^3.2.2",
     "azure-sb": "^0.10.6",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
